@@ -1,0 +1,43 @@
+﻿@model Selectum.Models.UserTaskSelection
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>UserTaskSelection</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.User.UserName)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.User.UserName)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Work.WorkId)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Work.WorkId)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Hours)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Hours)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.SelectedTask.TaskName)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.SelectedTask.TaskName)
+    </div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.UserTaskSelectionId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

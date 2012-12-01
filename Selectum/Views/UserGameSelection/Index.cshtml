@@ -1,0 +1,108 @@
+﻿@model IEnumerable<Selectum.Models.UserGameSelection>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table>
+    <thead>
+        <tr>
+            <td>
+                No Bet
+            </td>
+            <th>
+                Favorite
+            </th>
+            <th>
+                Undergod
+            </th>
+            <th>
+                Spread
+            </th>
+            <th>
+                Date/Time
+            </th>
+            <th>
+                Your Selection
+            </th>
+            <th>
+                Bet 1
+            </th>
+
+        </tr>
+    </thead>
+
+@*@for (int iCounter = 0; iCounter < Convert.ToInt32(Model.Count()); iCounter++) {*@
+
+@{ var iCounter = -1; }
+@foreach(var item in Model) {
+    iCounter = iCounter + 1;
+
+    var gamerow = "gameRow" + iCounter;
+    var yourSelection = "yourSelection" + iCounter;
+    var btnFavorite = "btnFavorite" + iCounter;
+    var btnUnderdog = "btnUnderdog" + iCounter;
+    var btnNoBet = "btnNoBet" + iCounter;
+    var rowHasBet = "rowHasBet" + iCounter;
+    var yourBetRadio = "radioYourBetG" + iCounter;
+    var yourBet = "yourBetValue" + iCounter;
+    var yourBetMinBet = "yourBetMinBet" + iCounter;
+    var yourBetMaxBet = "yourBetMaxBet" + iCounter;
+        
+    <tr id="@gamerow" class="alert">
+        <td>
+            <button id="@btnNoBet" class="btn btn-warning" type='submit' onclick='btnOnClick(@iCounter, "No Bet", "label label-warning", "alert")'>No Bet</button>
+            <input id="@yourBet", type='hidden' value=0 />
+            <input id="@yourBetMinBet" type='hidden' value=0 />
+            <input id="@yourBetMaxBet" type='hidden' value=0 />
+        </td>
+        <td>
+            <button id="@btnFavorite" class="btn btn-success" type='submit' onclick='btnOnClick(@iCounter, "@Html.DisplayFor(modelItem => item.Game.FavoriteTeam.TeamLongName)", "label label-success", "alert alert-success")'>@Html.DisplayFor(modelItem => item.Game.FavoriteTeam.TeamLongName)</button>
+        </td>
+        <td>
+            <button id="@btnFavorite" class="btn btn-danger" type='submit' onclick='btnOnClick(@iCounter, "@Html.DisplayFor(modelItem => item.Game.UnderdogTeam.TeamLongName)", "label label-danger", "alert alert-danger")'>@Html.DisplayFor(modelItem => item.Game.UnderdogTeam.TeamLongName)</button>
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Game.Spread)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Game.GameDateTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PickTeam.TeamLongName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Bet)
+
+           <span id="@yourSelection" class="label label-warning">No Bet</span>
+           <input id="@rowHasBet" type='hidden' value=0 />
+        </td>
+        @{ for (var xCounter = 1; xCounter <= 5; xCounter++)
+            {
+                var yourBetRadioNew = yourBetRadio + "B" + xCounter;
+                var yourBetNet = "yourBet" + iCounter;
+                   
+                <td>
+                    <input id="@yourBetRadioNew" type="radio" name="@yourBetNet" value="@xCounter" disabled="disabled" checked="checked" onclick="radioOnClick(@yourBetRadioNew, @iCounter, @xCounter)" />
+                </td>
+            }
+        }
+    </tr>
+}
+</table>
+
+@Scripts.Render("~/Scripts/UserGameSelection/selectionCalculations.js")
+@Scripts.Render("~/Scripts/UserGameSelection/selectionDomInteraction.js")
+@Scripts.Render("~/Scripts/UserGameSelection/selectionEvents.js")
+@Scripts.Render("~/Scripts/UserGameSelection/selectionLogging.js")
+@Scripts.Render("~/Scripts/UserGameSelection/selectionObjects.js")
+
+@*<script type="text/javascript" src="~/Scripts/UserGameSelection/selectionCalculations.js" />
+<script type="text/javascript" src="~/Scripts/UserGameSelection/selectionDomInteraction.js" />
+<script type="text/javascript" src="~/Scripts/UserGameSelection/selectionEvents.js" />
+<script type="text/javascript" src="~/Scripts/UserGameSelection/selectionLogging.js" />
+<script type="text/javascript" src="~/Scripts/UserGameSelection/selectionObjects.js" />*@

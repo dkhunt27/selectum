@@ -1,0 +1,53 @@
+﻿@model Selectum.Models.UserGameSelection
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<fieldset>
+    <legend>UserGameSelection</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.User.UserName)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.User.UserName)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Game.HomeTeam)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Game.HomeTeam)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Bet)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Bet)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.PickTeamId)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.PickTeamId)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.dummy)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.dummy)
+    </div>
+</fieldset>
+@using (Html.BeginForm()) {
+    <p>
+        <input type="submit" value="Delete" /> |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+}

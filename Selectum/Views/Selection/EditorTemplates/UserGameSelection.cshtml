@@ -1,0 +1,108 @@
+﻿@model Selectum.Models.UserGameSelection
+@{
+    Layout = null;
+
+    var iCounter = Model.UserGameSelectionId;
+
+    var gamerow = "gameRow" + iCounter;
+    var yourSelection = "yourSelection" + iCounter;
+    var btnFavorite = "btnFavorite" + iCounter;
+    var btnUnderdog = "btnUnderdog" + iCounter;
+    var btnNoBet = "btnNoBet" + iCounter;
+    var rowHasBet = "rowHasBet" + iCounter;
+    var yourBetRadio = "radioYourBetG" + iCounter;
+    var yourBet = "yourBetValue" + iCounter;
+    var yourBetMinBet = "yourBetMinBet" + iCounter;
+    var yourBetMaxBet = "yourBetMaxBet" + iCounter;
+    var selectionDataToggle = "selectionBtnGroup" + iCounter;
+    var betDataToggle = "betBtnGroup" + iCounter;
+
+    var rowClass = "warning";
+    var selectionClass = "label label-warning";
+    var toggleNoBet = "";
+    var toggleFavorite = "";
+    var toggleUnderdog = "";
+    if (Model.Game != null && Model.PickTeamId == Model.Game.FavoriteTeamId)
+    {
+        rowClass = "success";
+        selectionClass = "label label-success";
+        toggleFavorite = "data-toggle='button'";
+    }
+    else if (Model.Game != null && Model.PickTeamId == Model.Game.UnderdogTeamId)
+    {
+        rowClass = "error";
+        selectionClass = "label label-important";
+        toggleUnderdog = "data-toggle='button'";
+    }
+    else
+    {
+        rowClass = "warning";
+        selectionClass = "label label-warning";
+        toggleNoBet = "data-toggle='button'";
+    }
+}
+<tr id="@gamerow" class="@rowClass">
+    <td>
+        @Html.HiddenFor(m => m.UserGameSelectionId)
+
+        <div class="btn-group" data-toggle="buttons-radio">
+            <button id="@btnNoBet" class="btn btn-warning btn-small span1" type='submit' @Html.Raw(toggleNoBet) onclick='btnOnClick(@iCounter, "No Bet", "label label-warning", "warning")'>No Bet</button>
+            <button id="@btnFavorite" class="btn btn-success btn-small span2" type='submit' @Html.Raw(toggleFavorite) onclick='btnOnClick(@iCounter, "@Html.DisplayFor(m => m.Game.FavoriteTeam.TeamLongName)", "label label-success", "success")'>@Html.DisplayFor(m => m.Game.FavoriteTeam.TeamLongName)</button>
+            <button id="@btnUnderdog" class="btn btn-danger btn-small span2" type='submit' @Html.Raw(toggleUnderdog) onclick='btnOnClick(@iCounter, "@Html.DisplayFor(m => m.Game.UnderdogTeam.TeamLongName)", "label label-important", "error")'>@Html.DisplayFor(m => m.Game.UnderdogTeam.TeamLongName)</button>
+        </div>
+        
+        <input id="@yourBet", type='hidden' value=0 />
+        <input id="@yourBetMinBet" type='hidden' value=0 />
+        <input id="@yourBetMaxBet" type='hidden' value=0 />
+        <input id="@rowHasBet" type='hidden' value="@Model.Bet > 0" />
+    </td>
+    <td>
+        @Html.DisplayFor(m => m.Game.Spread)
+    </td>
+    <td>
+        <span>@Model.Game.GameDateTime.ToShortDateString()</span><br />
+        <span>@Model.Game.GameDateTime.ToShortTimeString()</span>
+    </td>      
+        @*<input id="@yourSelection" >@Model.PickTeamId />*@
+       @*@Html.TextBoxFor(m => m.PickTeam.TeamLongName, new {@class=selectionClass})*@
+        @Html.EditorFor(m => m.PickTeam, "PickTeam")
+    <td>
+        @Html.EditorFor(m => m.Bet)
+        <div class="btn-group" data-toggle="buttons-radio">
+            @{ var yourBetRadio0 = yourBetRadio + "B0";
+                var yourBet0 = "yourBet" + iCounter;
+                var isToggled = "";
+                var isDisabled = "";
+                   
+                if (Model.Bet == 0)
+                {
+                    isToggled = "data-toggle='button'";
+                }
+
+                if (Model.Bet == 0)
+                {
+                    isDisabled = "disabled='disabled'";
+                }
+            }
+            <button id="@yourBetRadio0" name="@yourBet0" class="btn btn-primary" type="submit" @Html.Raw(isDisabled) @Html.Raw(isToggled) onclick="radioOnClick(@yourBetRadio0, @iCounter, 0)">Bet 0</button>
+
+            @{ for (var xCounter = 1; xCounter <= 5; xCounter++)
+                {
+                    var yourBetRadioNew = yourBetRadio + "B" + xCounter;
+                    var yourBetNew = "yourBet" + iCounter;
+
+                    if (Model.Bet == xCounter)
+                    {
+                        isToggled = "data-toggle=\"button\"";
+                    }
+
+                    if (Model.Bet == 0)
+                    {
+                        isDisabled = "disabled=\"disabled\"";
+                    }
+                       
+                    <button id="@yourBetRadioNew" name="@yourBetNew" class="btn btn-primary" type="submit" @Html.Raw(isDisabled) @Html.Raw(isToggled) onclick="radioOnClick(@yourBetRadioNew, @iCounter, @xCounter)">@xCounter</button>
+                }
+            }
+        </div>
+</tr>

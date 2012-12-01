@@ -1,0 +1,45 @@
+﻿@model IEnumerable<Selectum.Models.GameFilter>
+
+@{
+    ViewBag.Title = "GameFilters";
+}
+
+<h2>GameFilters</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.GameFilterName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.GameFilterStartDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.GameFilterEndDate)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.GameFilterName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.GameFilterStartDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.GameFilterEndDate)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.GameFilterId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.GameFilterId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.GameFilterId })
+        </td>
+    </tr>
+}
+
+</table>

@@ -1,0 +1,15 @@
+﻿@model Selectum.Models.UserGameSelection
+@{
+    Layout = null;
+    }
+<tr >
+    <td>
+        @Html.HiddenFor(m => m.UserGameSelectionId)
+
+        @Html.DisplayFor(m => m.Game.Spread)
+        <span>@Model.Game.GameDateTime.ToShortDateString()</span><br />
+        <span>@Model.Game.GameDateTime.ToShortTimeString()</span>
+        @Html.EditorFor(m => m.PickTeamId)
+        @Html.EditorFor(m => m.Bet)
+    </td>
+</tr>

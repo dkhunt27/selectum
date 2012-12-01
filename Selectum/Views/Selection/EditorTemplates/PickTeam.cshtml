@@ -1,0 +1,9 @@
+﻿@model Selectum.Models.Team
+@{
+    Layout = null;
+}
+<td>
+    @Html.HiddenFor(m => m.TeamId)
+    @Html.EditorFor(m => m.TeamLongName)
+    <span>PickTeamEditor</span>
+</td>

@@ -1,0 +1,57 @@
+﻿@model Selectum.Models.Game
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>Game</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.GameFilter.GameFilterName)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.GameFilter.GameFilterName)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.GameDateTime)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.GameDateTime)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.FavoriteTeamId)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.FavoriteTeamId)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.UnderdogTeamId)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.UnderdogTeamId)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Spread)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Spread)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.HomeTeam)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.HomeTeam)
+    </div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.GameId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -1,0 +1,36 @@
+﻿@model Selectum.Models.GameFilter
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>GameFilter</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.GameFilterName)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.GameFilterName)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.GameFilterStartDate)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.GameFilterStartDate)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.GameFilterEndDate)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.GameFilterEndDate)
+    </div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.GameFilterId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

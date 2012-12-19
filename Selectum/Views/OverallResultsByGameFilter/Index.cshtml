@@ -1,0 +1,73 @@
+﻿@model Selectum.ViewModels.OverallResultsByGameFilter
+
+@{
+    ViewBag.Title = "Overall Results";
+}
+
+<div class="navbar">
+  <div class="navbar-inner">
+    <a class="brand disabled">Overall Results</a>
+  </div>
+</div>
+
+<table class="table table-bordered">
+    <tr>
+        <th colspan="1">
+        </th>
+        @foreach (var users in Model.Users)
+        {
+            <th colspan="3" class="center">
+                @Html.DisplayFor(u => users.UserName)
+            </th>
+        }
+    </tr>
+    <tr>
+        <th>
+            Game Filter
+        </th>
+        @foreach (var users in Model.Users)
+        {
+             <th>
+                Points
+            </th>
+            <th>
+                Bets
+            </th>
+            <th>
+                Wins
+            </th>
+        }
+    </tr>
+
+@foreach (var results in Model.Results)
+{
+    <tr>
+        <td>
+            @Html.DisplayFor(gr => results.GameFilter.GameFilterName)
+        </td>
+        @foreach (var userResults in results.UserResults)
+        {
+            <td>
+                @Html.DisplayFor(ugr => userResults.Points)
+            </td>
+            <td>
+                @Html.DisplayFor(ugr => userResults.Wins)
+            </td>
+            <td>
+                @Html.DisplayFor(ugr => userResults.Bets)
+            </td>
+        }
+    </tr>
+}
+    <tr>
+        <td>
+            Total
+        </td>
+        @foreach(var total in Model.Totals)
+        {
+            <td colspan="3">
+                @total
+            </td>
+        }
+    </tr>
+</table>

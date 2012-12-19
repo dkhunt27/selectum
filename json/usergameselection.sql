@@ -25,8 +25,8 @@ select
 		' homeTeam: "' + convert(varchar, g.HomeTeam) + '"' + 
 	' }'+ ',' +
 	' bet: ' + convert(varchar,ugs.Bet) + ',' +
-	--' pickTeamId: ' + convert(varchar,ugs.PickTeamId) + ',' +
-	' pickTeamId: ' + convert(varchar,pt.TeamId) + ',' +
+	' pickTeamId: ' + convert(varchar,ugs.PickTeamId) + ',' +
+	--' pickTeamId: ' + convert(varchar,pt.TeamId) + ',' +
 	' pickTeam: ' +
 			' {' +
 			' teamId: ' + convert(varchar, pt.TeamId) + ',' +
@@ -39,8 +39,8 @@ from
 	inner join Game g on ugs.GameId = g.GameId
 	inner join Team ft on g.FavoriteTeamId = ft.TeamId
 	inner join Team ut on g.UnderdogTeamId = ut.TeamId
-	--inner join Team pt on ugs.PickTeamId = pt.TeamId
-	inner join Team pt on pt.TeamId = 1
+	inner join Team pt on ugs.PickTeamId = pt.TeamId
+	--inner join Team pt on pt.TeamId = 1
 where
 	ugs.UserId = 1 and
 	g.GameId between 49 and 61

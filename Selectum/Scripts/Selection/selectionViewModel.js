@@ -1,52 +1,80 @@
-var selectionViewModel = {
-    maxBetForAnyOneGame: ko.observable(5),
-    minSpentPointsForAnyOneWeek: ko.observable(6),
-    bonusPointsAllottedPerBetOverMin: ko.observable(1),
-    maxPossibleBetForAnyGameThisWeek: ko.observable(0),
-    possibleBets: ko.observable(13),
-    placedBets: ko.observable(0),
-    bonusPoints: ko.observable(0),
-    spentPoints: ko.observable(0),
-    currentGameFilter: ko.observable(this.gameFilters[1]),
-    gameFilters: ko.observableArray([{ gameFilterId: 4, gameFilterName: "Week 04", gameFilterStartDate: "2012-09-25 00:00:00.000", gameFilterEndDate: "2012-10-01 23:59:59.997" },
-               { gameFilterId: 5, gameFilterName: "Week 05", gameFilterStartDate: "2012-10-02 00:00:00.000", gameFilterEndDate: "2012-10-08 23:59:59.997" },
-               { gameFilterId: 6, gameFilterName: "Week 06", gameFilterStartDate: "2012-10-09 00:00:00.000", gameFilterEndDate: "2012-10-15 23:59:59.997" }
-    ]),
-    /*userGameSelections: ko.observableArray([
-                     { userGameSelectionId: 190, userId: 1, gameId: 49, game: {
-                         }, spread: 3, favoriteTeam: "Atlanta", underdogTeam: "Washington", bet: 0, pickTeamId: 1, pickTeam: ko.observable("No Bet"), gameDateTime: "Oct  7 2012  1:00PM", homeTeam: "U", minGameBet: 0, maxGameBet: 0 },
-                     { userGameSelectionId: 191, userId: 1, gameId: 50, spread: 3.5, favoriteTeam: "Pittsburgh", underdogTeam: "Philadelphia", bet: 0, pickTeamId: 1, pickTeam: "No Bet", gameDateTime: "Oct  7 2012  1:00PM", homeTeam: "F", minGameBet: 0, maxGameBet: 0 },
-                     { userGameSelectionId: 192, userId: 1, gameId: 51, spread: 7, favoriteTeam: "Green Bay", underdogTeam: "Indianapolis", bet: 0, pickTeamId: 1, pickTeam: "No Bet", gameDateTime: "Oct  7 2012  1:00PM", homeTeam: "U", minGameBet: 0, maxGameBet: 0 },
-                     { userGameSelectionId: 193, userId: 1, gameId: 52, spread: 9, favoriteTeam: "NY Giants", underdogTeam: "Cleveland", bet: 0, pickTeamId: 1, pickTeam: "No Bet", gameDateTime: "Oct  7 2012  1:00PM", homeTeam: "F", minGameBet: 0, maxGameBet: 0 },
-                     { userGameSelectionId: 194, userId: 1, gameId: 53, spread: 5.5, favoriteTeam: "Minnesota", underdogTeam: "Tennessee", bet: 0, pickTeamId: 1, pickTeam: "No Bet", gameDateTime: "Oct  7 2012  4:25PM", homeTeam: "F", minGameBet: 0, maxGameBet: 0 },
-                     { userGameSelectionId: 195, userId: 1, gameId: 54, spread: 3.5, favoriteTeam: "Cincinnati", underdogTeam: "Miami", bet: 0, pickTeamId: 1, pickTeam: "No Bet", gameDateTime: "Oct  7 2012  1:00PM", homeTeam: "F", minGameBet: 0, maxGameBet: 0 },
-                     { userGameSelectionId: 196, userId: 1, gameId: 55, spread: 6, favoriteTeam: "Baltimore", underdogTeam: "Kansas City", bet: 0, pickTeamId: 1, pickTeam: "No Bet", gameDateTime: "Oct  7 2012  1:00PM", homeTeam: "U", minGameBet: 0, maxGameBet: 0 },
-                     { userGameSelectionId: 197, userId: 1, gameId: 56, spread: 3, favoriteTeam: "Carolina", underdogTeam: "Seattle", bet: 0, pickTeamId: 1, pickTeam: "No Bet", gameDateTime: "Oct  7 2012  4:05PM", homeTeam: "F", minGameBet: 0, maxGameBet: 0 },
-                     { userGameSelectionId: 198, userId: 1, gameId: 57, spread: 6, favoriteTeam: "Chicago", underdogTeam: "Jacksonville", bet: 0, pickTeamId: 1, pickTeam: "No Bet", gameDateTime: "Oct  7 2012  4:05PM", homeTeam: "U", minGameBet: 0, maxGameBet: 0 },
-                     { userGameSelectionId: 199, userId: 1, gameId: 58, spread: 6.5, favoriteTeam: "New England", underdogTeam: "Denver", bet: 0, pickTeamId: 1, pickTeam: "No Bet", gameDateTime: "Oct  7 2012  4:25PM", homeTeam: "F", minGameBet: 0, maxGameBet: 0 },
-                     { userGameSelectionId: 200, userId: 1, gameId: 59, spread: 9.5, favoriteTeam: "San Francisco", underdogTeam: "Buffalo", bet: 0, pickTeamId: 1, pickTeam: "No Bet", gameDateTime: "Oct  7 2012  8:30PM", homeTeam: "F", minGameBet: 0, maxGameBet: 0 },
-                     { userGameSelectionId: 201, userId: 1, gameId: 60, spread: 3.5, favoriteTeam: "New Orleans", underdogTeam: "San Diego", bet: 0, pickTeamId: 1, pickTeam: "No Bet", gameDateTime: "Oct  8 2012  8:35PM", homeTeam: "U", minGameBet: 0, maxGameBet: 0 },
-                     { userGameSelectionId: 202, userId: 1, gameId: 61, spread: 8, favoriteTeam: "Houston", underdogTeam: "NY Jets", bet: 0, pickTeamId: 1, pickTeam: "No Bet", gameDateTime: "Oct 11 2012  8:25PM", homeTeam: "U", minGameBet: 0, maxGameBet: 0 }
-    ]),*/
-    userGameSelections: ko.observableArray([
-{ userGameSelectionId: 190, userId: 1, gameId: 49, game: { gameId: 49, gameFilterId: 5, gameDateTime: "Oct  7 2012  1:00PM", favoriteTeamId: 16, favoriteTeam: { teamId: 16, teamShortName: "ATL", teamLongName: "Atlanta" }, underdogTeamId: 12, underdogTeam: { teamId: 12, teamShortName: "WAS", teamLongName: "Washington" }, spread: 3.00, homeTeam: "U" }, bet: 1, pickTeamId: 1, pickTeam: { teamId: 1, teamShortName: "X  ", teamLongName: "No Bet" } },
-{ userGameSelectionId: 191, userId: 1, gameId: 50, game: { gameId: 50, gameFilterId: 5, gameDateTime: "Oct  7 2012  1:00PM", favoriteTeamId: 13, favoriteTeam: { teamId: 13, teamShortName: "PIT", teamLongName: "Pittsburgh" }, underdogTeamId: 7, underdogTeam: { teamId: 7, teamShortName: "PHI", teamLongName: "Philadelphia" }, spread: 3.50, homeTeam: "F" }, bet: 1, pickTeamId: 1, pickTeam: { teamId: 1, teamShortName: "X  ", teamLongName: "No Bet" } },
-{ userGameSelectionId: 192, userId: 1, gameId: 51, game: { gameId: 51, gameFilterId: 5, gameDateTime: "Oct  7 2012  1:00PM", favoriteTeamId: 33, favoriteTeam: { teamId: 33, teamShortName: "GB ", teamLongName: "Green Bay" }, underdogTeamId: 21, underdogTeam: { teamId: 21, teamShortName: "IND", teamLongName: "Indianapolis" }, spread: 7.00, homeTeam: "U" }, bet: 1, pickTeamId: 1, pickTeam: { teamId: 1, teamShortName: "X  ", teamLongName: "No Bet" } },
-{ userGameSelectionId: 193, userId: 1, gameId: 52, game: { gameId: 52, gameFilterId: 5, gameDateTime: "Oct  7 2012  1:00PM", favoriteTeamId: 2, favoriteTeam: { teamId: 2, teamShortName: "NYG", teamLongName: "NY Giants" }, underdogTeamId: 29, underdogTeam: { teamId: 29, teamShortName: "CLE", teamLongName: "Cleveland" }, spread: 9.00, homeTeam: "F" }, bet: 1, pickTeamId: 1, pickTeam: { teamId: 1, teamShortName: "X  ", teamLongName: "No Bet" } },
-{ userGameSelectionId: 194, userId: 1, gameId: 53, game: { gameId: 53, gameFilterId: 5, gameDateTime: "Oct  7 2012  4:25PM", favoriteTeamId: 4, favoriteTeam: { teamId: 4, teamShortName: "MIN", teamLongName: "Minnesota" }, underdogTeamId: 32, underdogTeam: { teamId: 32, teamShortName: "TEN", teamLongName: "Tennessee" }, spread: 5.50, homeTeam: "F" }, bet: 1, pickTeamId: 1, pickTeam: { teamId: 1, teamShortName: "X  ", teamLongName: "No Bet" } },
-{ userGameSelectionId: 195, userId: 1, gameId: 54, game: { gameId: 54, gameFilterId: 5, gameDateTime: "Oct  7 2012  1:00PM", favoriteTeamId: 9, favoriteTeam: { teamId: 9, teamShortName: "CIN", teamLongName: "Cincinnati" }, underdogTeamId: 28, underdogTeam: { teamId: 28, teamShortName: "MIA", teamLongName: "Miami" }, spread: 3.50, homeTeam: "F" }, bet: 1, pickTeamId: 1, pickTeam: { teamId: 1, teamShortName: "X  ", teamLongName: "No Bet" } },
-{ userGameSelectionId: 196, userId: 1, gameId: 55, game: { gameId: 55, gameFilterId: 5, gameDateTime: "Oct  7 2012  1:00PM", favoriteTeamId: 22, favoriteTeam: { teamId: 22, teamShortName: "BAL", teamLongName: "Baltimore" }, underdogTeamId: 23, underdogTeam: { teamId: 23, teamShortName: "KC ", teamLongName: "Kansas City" }, spread: 6.00, homeTeam: "U" }, bet: 1, pickTeamId: 1, pickTeam: { teamId: 1, teamShortName: "X  ", teamLongName: "No Bet" } },
-{ userGameSelectionId: 197, userId: 1, gameId: 56, game: { gameId: 56, gameFilterId: 5, gameDateTime: "Oct  7 2012  4:05PM", favoriteTeamId: 17, favoriteTeam: { teamId: 17, teamShortName: "CAR", teamLongName: "Carolina" }, underdogTeamId: 24, underdogTeam: { teamId: 24, teamShortName: "SEA", teamLongName: "Seattle" }, spread: 3.00, homeTeam: "F" }, bet: 1, pickTeamId: 1, pickTeam: { teamId: 1, teamShortName: "X  ", teamLongName: "No Bet" } },
-{ userGameSelectionId: 198, userId: 1, gameId: 57, game: { gameId: 57, gameFilterId: 5, gameDateTime: "Oct  7 2012  4:05PM", favoriteTeamId: 18, favoriteTeam: { teamId: 18, teamShortName: "CHI", teamLongName: "Chicago" }, underdogTeamId: 30, underdogTeam: { teamId: 30, teamShortName: "JAC", teamLongName: "Jacksonville" }, spread: 6.00, homeTeam: "U" }, bet: 1, pickTeamId: 1, pickTeam: { teamId: 1, teamShortName: "X  ", teamLongName: "No Bet" } },
-{ userGameSelectionId: 199, userId: 1, gameId: 58, game: { gameId: 58, gameFilterId: 5, gameDateTime: "Oct  7 2012  4:25PM", favoriteTeamId: 3, favoriteTeam: { teamId: 3, teamShortName: "NE ", teamLongName: "New England" }, underdogTeamId: 26, underdogTeam: { teamId: 26, teamShortName: "DEN", teamLongName: "Denver" }, spread: 6.50, homeTeam: "F" }, bet: 1, pickTeamId: 1, pickTeam: { teamId: 1, teamShortName: "X  ", teamLongName: "No Bet" } },
-{ userGameSelectionId: 200, userId: 1, gameId: 59, game: { gameId: 59, gameFilterId: 5, gameDateTime: "Oct  7 2012  4:25PM", favoriteTeamId: 15, favoriteTeam: { teamId: 15, teamShortName: "SF ", teamLongName: "San Francisco" }, underdogTeamId: 6, underdogTeam: { teamId: 6, teamShortName: "BUF", teamLongName: "Buffalo" }, spread: 9.50, homeTeam: "F" }, bet: 5, pickTeamId: 1, pickTeam: { teamId: 1, teamShortName: "X  ", teamLongName: "No Bet" } },
-{ userGameSelectionId: 201, userId: 1, gameId: 60, game: { gameId: 60, gameFilterId: 5, gameDateTime: "Oct  7 2012  8:30PM", favoriteTeamId: 5, favoriteTeam: { teamId: 5, teamShortName: "NO ", teamLongName: "New Orleans" }, underdogTeamId: 14, underdogTeam: { teamId: 14, teamShortName: "SD ", teamLongName: "San Diego" }, spread: 3.50, homeTeam: "F" }, bet: 1, pickTeamId: 1, pickTeam: { teamId: 1, teamShortName: "X  ", teamLongName: "No Bet" } },
-{ userGameSelectionId: 202, userId: 1, gameId: 61, game: { gameId: 61, gameFilterId: 5, gameDateTime: "Oct  8 2012  8:35PM", favoriteTeamId: 10, favoriteTeam: { teamId: 10, teamShortName: "HOU", teamLongName: "Houston" }, underdogTeamId: 20, underdogTeam: { teamId: 20, teamShortName: "NYJ", teamLongName: "NY Jets" }, spread: 8.00, homeTeam: "U" }, bet: 1, pickTeamId: 1, pickTeam: { teamId: 1, teamShortName: "X  ", teamLongName: "No Bet" } }
+var selectionViewModel = function (data) {
+    var self = this;
 
-    ]),
-    userMadeSelection: function (selection, selectionClass, rowClass, viewModel, userGameSelection, event) {
-        //alert(ko.toJSON(userGameSelection));
-        //alert(ko.toJSON(selection));
+    if (typeof data === "undefined") throw new Error("data passed to selectionViewModel is undefined");
+    if (data === null) throw new Error("data passed to selectionViewModel is null");
+
+    self.debugLevel = 1;    
+
+    if (self.debugLevel > 0) console.log(data);
+
+
+
+    // validation, make sure the vm is initialized correctly
+    /*if (isNaN(data.maxBetForAnyOneGame)) throw Error("data.maxBetForAnyOneGame cannot be NaN");
+    if (isNaN(data.minSpentPointsForAnyOneWeek)) throw Error("data.minSpentPointsForAnyOneWeek cannot be NaN");
+    if (isNaN(data.extraPointFactorPerBetOverMin)) throw Error("data.extraPointFactorPerBetOverMin cannot be NaN");
+    if (isNaN(data.possibleBets)) throw Error("data.possibleBets cannot be NaN");
+    if (isNaN(data.placedBets)) throw Error("data.placedBets cannot be NaN");
+    if (isNaN(data.bonusPoints)) throw Error("data.bonusPoints cannot be NaN");
+    if (isNaN(data.spentPoints)) throw Error("data.spentPoints cannot be NaN");
+    if (isNaN(data.gameRowsHaveBeenSaved)) throw Error("data.gameRowsHaveBeenSaved cannot be NaN");
+    if (isNaN(data.selectionDisabledForThisGameFilter)) throw Error("data.selectionDisabledForThisGameFilter cannot be NaN");*/
+
+    self.toggleBetClass = "btn-info";
+    self.toggleNoBetClass = "btn-warning";
+    self.toggleFavoriteClass = "btn-success";
+    self.toggleUnderdogClass = "btn-danger";
+    self.toggleNoBetRowClass = "warning";
+    self.toggleFavoriteRowClass = "success";
+    self.toggleUnderdogRowClass = "error";
+
+    //alert(ko.toJSON(data.userGameSelection));
+    self.MAXBETFORANYONEGAME = data.maxBetForAnyOneGame;    // this is a const, should not change
+    self.MINSPENTPOINTSFORANYONEWEEK = data.minSpentPointsForAnyOneWeek;  // this is a const
+    self.EXTRAPOINTFACTORPERBETOVERMIN = data.extraPointFactorPerBetOverMin;  // this is a const
+    self.maxPossibleAdditionalBetForAnyGameThisWeek = ko.observable(0);  // this is calculated in calculateMaxPossibleAdditionalBetForAnyGameThisWeek
+    self.possibleBets = ko.observable(data.possibleBets);
+    self.placedBets = ko.observable(data.placedBets);
+    self.bonusPoints = ko.observable(data.bonusPoints);
+    self.spentPoints = ko.observable(data.spentPoints);
+    self.gameRows = new selectionGameRowsViewModel(data.gameRows);
+    self.gameRowsHaveBeenSaved = data.gameRowsHaveBeenSaved;
+    self.selectionDisabledForThisGameFilter = data.selectionDisabledForThisGameFilter;
+    self.selectionDisabled = false; //TODO, make KO computed
+
+    // validation, make sure the vm is initialized correctly
+    /*if (isNaN(self.MAXBETFORANYONEGAME)) throw Error("self.MAXBETFORANYONEGAME cannot be NaN");
+    if (isNaN(self.MINSPENTPOINTSFORANYONEWEEK)) throw Error("self.MINSPENTPOINTSFORANYONEWEEK cannot be NaN");
+    if (isNaN(self.EXTRAPOINTFACTORPERBETOVERMIN)) throw Error("self.EXTRAPOINTFACTORPERBETOVERMIN cannot be NaN");
+    if (isNaN(self.maxPossibleAdditionalBetForAnyGameThisWeek())) throw Error("self.maxPossibleAdditionalBetForAnyGameThisWeek() cannot be NaN");
+    if (isNaN(self.possibleBets())) throw Error("self.possibleBets() cannot be NaN");
+    if (isNaN(self.placedBets())) throw Error("self.placedBets() cannot be NaN");
+    if (isNaN(self.bonusPoints())) throw Error("self.bonusPoints() cannot be NaN");
+    if (isNaN(self.spentPoints())) throw Error("self.spentPoints() cannot be NaN");*/
+
+    self.test = function (id, viewModel) {
+        self.betPickersActive(!self.betPickersActive());
+        self.betPickersDisabled(!self.betPickersDisabled());
+        self.betPickersToggled(!self.betPickersToggled());
+
+        console.log(self.betPickersActive());
+        console.log(self.betPickersDisabled());
+        console.log(self.betPickersToggled());
+    };
+
+    self.userMadeSelection = function (selection, selectionClass, rowClass, viewModel, gameRow, event) {
+        if (self.debugLevel > 0) console.log("userMadeSelection");
+        self.assertNotUndefinedOrNull(selection, "userMadeSelection", "selection");
+        self.assertNotUndefinedOrNull(selectionClass, "userMadeSelection", "selectionClass");
+        self.assertNotUndefinedOrNull(rowClass, "userMadeSelection", "rowClass");
+        self.assertNotUndefinedOrNull(viewModel, "userMadeSelection", "viewModel");
+        self.assertNotUndefinedOrNull(gameRow, "userMadeSelection", "gameRow");
+        self.assertNotUndefinedOrNull(event, "userMadeSelection", "event");
+
+        var userGameSelection = gameRow.userGameSelection;
+        var selectionDisabled = viewModel.gameRowsHaveBeenSaved || viewModel.selectionDisabledForThisGameFilter || userGameSelection.saved;
+
         var toggleBetClass = "btn-info";
         var toggleNoBetClass = "btn-warning";
         var toggleFavoriteClass = "btn-success";
@@ -56,127 +84,187 @@ var selectionViewModel = {
         var toggleUnderdogRowClass = "error";
 
         if (selection === "favorite") {
-            userGameSelection.pickTeamId = userGameSelection.game.favoriteTeamId;
-            userGameSelection.pickTeam = userGameSelection.game.favoriteTeam;
+            userGameSelection.pickTeamId = userGameSelection.gameSpread.favoriteTeamId;
+            userGameSelection.pickTeam = userGameSelection.gameSpread.favoriteTeam;
             this.updateDomYourSelectionPicker(userGameSelection, event.target, toggleFavoriteClass, toggleNoBetClass, toggleUnderdogClass, toggleFavoriteRowClass, toggleUnderdogRowClass, toggleNoBetRowClass);
-            this.initializeBet(userGameSelection, toggleBetClass);  // first time picking a team, initialize the bet
-            this.initializeAllOtherVariables(userGameSelection, viewModel, toggleBetClass);
+            //if (userGameSelection.bet === 0) {
+                // first time picking a team, initialize the bet
+                this.initializeBet(gameRow.userGameSelection, gameRow.betPickers, selectionDisabled);
+                this.initializeAllOtherVariables(gameRow, viewModel, selectionDisabled);
+            //}
         }
         else if (selection === "underdog") {
-            userGameSelection.pickTeamId = userGameSelection.game.underdogTeamId;
-            userGameSelection.pickTeam = userGameSelection.game.underdogTeam;
+            userGameSelection.pickTeamId = userGameSelection.gameSpread.underdogTeamId;
+            userGameSelection.pickTeam = userGameSelection.gameSpread.underdogTeam;
             this.updateDomYourSelectionPicker(userGameSelection, event.target, toggleUnderdogClass, toggleNoBetClass, toggleFavoriteClass, toggleUnderdogRowClass, toggleFavoriteRowClass, toggleNoBetRowClass);
-            this.initializeBet(userGameSelection, toggleBetClass); // first time picking a team, initialize the bet
-            this.initializeAllOtherVariables(userGameSelection, viewModel, toggleBetClass);
+            //if (userGameSelection.bet === 0) {
+                // first time picking a team, initialize the bet
+                this.initializeBet(gameRow.userGameSelection, gameRow.betPickers, selectionDisabled); 
+                this.initializeAllOtherVariables(gameRow, viewModel, selectionDisabled);
+            //}
         }
         else {
+
+            // TODO fix the hardcoded nobet team
             userGameSelection.pickTeamId = 1;
             userGameSelection.pickTeam = { teamId: 1, teamShortName: "X  ", teamLongName: "No Bet" };
             this.updateDomYourSelectionPicker(userGameSelection, event.target, toggleNoBetClass, toggleFavoriteClass, toggleUnderdogClass, toggleNoBetRowClass, toggleFavoriteRowClass, toggleUnderdogRowClass);
-            this.removeBet(userGameSelection, toggleBetClass); // remove bet if selected no bet
-            this.resetAllOtherBetsToOne(viewModel, toggleBetClass);  // since remove one bet can affect bonus points and thus spent points, just reset any bets to 1
-            this.initializeAllOtherVariables(userGameSelection, viewModel, toggleBetClass);
+            this.removeBet(gameRow); // remove bet if selected no bet
+            this.resetAllOtherBetsToOne(viewModel.gameRows.gameRows, toggleBetClass, selectionDisabled);  // since remove one bet can affect bonus points and thus spent points, just reset any bets to 1
+            this.initializeAllOtherVariables(gameRow, viewModel, selectionDisabled);
         }
+    };
 
-        // todo, update this to use observable
-        $("#yourSelection" + userGameSelection.userGameSelectionId).text(userGameSelection.pickTeam);
-        $("#yourSelection" + userGameSelection.userGameSelectionId).css(selectionClass);
-        $("#gameRow" + userGameSelection.userGameSelectionId).css(rowClass);
-    },
+    self.userMadeBet = function (bet, viewModel, gameRow, event) {
+        if (self.debugLevel > 0) console.log("userMadeBet");
+        self.assertNotUndefinedOrNull(bet, "userMadeBet", "bet");
+        self.assertNotUndefinedOrNull(viewModel, "userMadeBet", "viewModel");
+        self.assertNotUndefinedOrNull(gameRow, "userMadeBet", "gameRow");
+        self.assertNotUndefinedOrNull(event, "userMadeBet", "event");
 
-    userMadeBet: function (bet, viewModel, userGameSelection, event) {
+
         var toggleBetClass = "btn-info";
 
-        this.changeBet(userGameSelection, bet, toggleBetClass);
-        this.calculateAllOtherVariables(userGameSelection, viewModel, toggleBetClass);
-    },
+        this.changeBet(gameRow.userGameSelection, gameRow.betPickers, bet, viewModel.selectionDisabledForThisGameFilter || gameRow.userGameSelection.saved);
+        this.calculateAllOtherVariables(viewModel);
+    };
 
-    initializeBet: function (userGameSelection, toggleBetClass) {
+    /**
+    */
+    self.initializeBet = function (userGameSelection, betPickers, selectionDisabled) {
+        if (self.debugLevel > 0) console.log("initializeBet");
+        self.assertNotUndefinedOrNull(userGameSelection, "initializeBet", "userGameSelection");
+        self.assertNotUndefinedOrNull(betPickers, "initializeBet", "betPickers");
+        self.assertNotUndefinedOrNull(selectionDisabled, "initializeBet", "selectionDisabled");
+
+        // set the bet to 1 and enable it
         userGameSelection.bet = 1;
-        //this.updateDomYourBet(userGameSelection);// todo, update this to use observable
-        this.updateDomYourBetPicker(userGameSelection, userGameSelection.bet, -1, toggleBetClass);
-    },
+        self.enableBetPicker(betPickers[userGameSelection.bet - 1], userGameSelection.bet, selectionDisabled);
+    };
 
-    removeBet: function (userGameSelection, toggleBetClass) {
-        this.updateDomYourBetPicker(userGameSelection, -1, userGameSelection.bet, toggleBetClass);
-        userGameSelection.bet = 0;
-        //this.updateDomYourBet(userGameSelection);// todo, update this to use observablev
-    },
+    /**
+    */
+    self.removeBet = function (gameRow) {
+        if (self.debugLevel > 0) console.log("removeBet");
+        self.assertNotUndefinedOrNull(gameRow, "removeBet", "gameRow");
 
-    changeBet: function (userGameSelection, changeBetAmount, toggleBetClass) {
-        userGameSelection.bet = changeBetAmount;
-        //this.updateDomYourBet(userGameSelection);// todo, update this to use observable
-        //this.updateDomToggledButtonElement($("#yourBetB" + userGameSelection.bet + "G" + userGameSelection.userGameSelectionId), toggleClass);
-        this.updateDomYourBetPicker(userGameSelection, userGameSelection.bet, -1, toggleBetClass);
-    },
+        // disable the picker itself
+        self.disableAllBetPickers(gameRow.betPickers, gameRow.userGameSelection.gameSpread.game.gameId);
 
-    initializeAllOtherVariables: function (userGameSelection, viewModel, toggleBetClass) {
-        this.calculateInitialMinMaxBet(userGameSelection);
-        this.calculateInitialBetPicker(userGameSelection, toggleBetClass);
-        this.calculateAllOtherVariables(userGameSelection, viewModel, toggleBetClass);
-    },
+        // set the bet to 0
+        gameRow.userGameSelection.bet = 0;
+    };
 
-    calculateAllOtherVariables: function (userGameSelection, viewModel, toggleBetClass) {
-        this.calculateTotalValues(viewModel);
-        this.calculateMaxPossibleBetForAnyGameThisWeek(viewModel);
-        this.calculateMaxPossibleBetForThisGame(userGameSelection, viewModel);
+    /**
+    */
+    self.changeBet = function (userGameSelection, betPickers, newBet, selectionDisabled) {
+        if (self.debugLevel > 0) console.log("changeBet");
+        self.assertNotUndefinedOrNull(userGameSelection, "changeBet", "userGameSelection");
+        self.assertNotUndefinedOrNull(betPickers, "changeBet", "betPickers");
+        self.assertNotUndefinedOrNull(newBet, "changeBet", "newBet");
+        self.assertNotUndefinedOrNull(selectionDisabled, "changeBet", "selectionDisabled");
 
-        for (var i = 0; i < viewModel.userGameSelections().length; i++) {
-            var ugs = viewModel.userGameSelections()[i];
+        userGameSelection.bet = newBet;
 
+        self.enableAllBetPickers(betPickers, userGameSelection.bet, selectionDisabled);
+    };
+
+    self.initializeAllOtherVariables = function (gameRow, viewModel, selectionDisabled) {
+        if (self.debugLevel > 0) console.log("initializeAllOtherVariables");
+        self.assertNotUndefinedOrNull(gameRow, "initializeAllOtherVariables", "gameRow");
+        self.assertNotUndefinedOrNull(viewModel, "initializeAllOtherVariables", "viewModel");
+        self.assertNotUndefinedOrNull(selectionDisabled, "initializeAllOtherVariables", "selectionDisabled");
+
+        self.initializeMinMaxBet(gameRow.userGameSelection);
+        //self.initializeBetPicker(gameRow.userGameSelection.bet, gameRow.betPickers, selectionDisabled);
+        self.calculateAllOtherVariables(viewModel);
+    };
+
+    /**
+    */
+    self.calculateAllOtherVariables = function (viewModel) {
+        if (self.debugLevel > 0) console.log("calculateAllOtherVariables");
+        self.assertNotUndefinedOrNull(viewModel, "calculateAllOtherVariables", "viewModel");
+
+        self.calculateTotalValues(viewModel.gameRows.gameRows, viewModel.MINSPENTPOINTSFORANYONEWEEK, viewModel.EXTRAPOINTFACTORPERBETOVERMIN);
+        self.calculateMaxPossibleAdditionalBetForAnyGameThisWeek(viewModel.bonusPoints(), viewModel.MAXBETFORANYONEGAME);
+        self.calculateMaxPossibleBetForEachGame(viewModel.gameRows.gameRows, viewModel.maxPossibleAdditionalBetForAnyGameThisWeek(), viewModel.MAXBETFORANYONEGAME);
+
+        for (var i = 0; i < viewModel.gameRows.gameRows.length; i++) {
+            var gameRow = viewModel.gameRows.gameRows[i];
+            var ugs = gameRow.userGameSelection;
+            var betPickers = gameRow.betPickers;
+            var selectionDisabled = viewModel.selectionDisabledForThisGameFilter || ugs.saved;
+            
             // first just disable all bet pickers just in case
-            this.updateDomYourBetPicker(ugs, -1, 1, toggleBetClass);
-            this.updateDomYourBetPicker(ugs, -1, 2, toggleBetClass);
-            this.updateDomYourBetPicker(ugs, -1, 3, toggleBetClass);
-            this.updateDomYourBetPicker(ugs, -1, 4, toggleBetClass);
-            this.updateDomYourBetPicker(ugs, -1, 5, toggleBetClass);
+            self.disableAllBetPickers(betPickers, gameRow.userGameSelection.gameSpread.game.gameId);
 
             if (ugs.bet > 0) {
-                for (var x = 0; x <= ugs.maxGameBet; x++) {
-                    this.updateDomYourBetPicker(ugs, x, -1, toggleBetClass);
+
+                // loop through the bet pickers enabling them all up to the max game bet for that game row
+                for (var x = 0; x < ugs.maxGameBet; x++) {
+                    self.enableBetPicker(betPickers[x], ugs.bet, selectionDisabled);
                 }
             }
         }
-    },
+    };
 
-    calculateInitialBetPicker: function (userGameSelection, toggleClass) {
-        if (userGameSelection.bet === 0) {
-            this.updateDomYourBetPicker(userGameSelection, -1, 1, toggleClass);
-            this.updateDomYourBetPicker(userGameSelection, -1, 2, toggleClass);
-            this.updateDomYourBetPicker(userGameSelection, -1, 3, toggleClass);
-            this.updateDomYourBetPicker(userGameSelection, -1, 4, toggleClass);
-            this.updateDomYourBetPicker(userGameSelection, -1, 5, toggleClass);
+    /**
+    */
+    self.initializeBetPicker = function (bet, betPickers, selectionDisabled) {
+        if (self.debugLevel > 0) console.log("initializeBetPicker");
+        self.assertNotUndefinedOrNull(bet, "initializeBetPicker", "bet");
+        self.assertNotUndefinedOrNull(betPickers, "initializeBetPicker", "betPickers");
+        self.assertNotUndefinedOrNull(selectionDisabled, "initializeBetPicker", "selectionDisabled");
+
+        // verify the state of the data
+        if (bet != 1) throw new Error("initializeBetPicker must have a bet = 1; bet:" + bet);
+
+        for (var i = 0; i < betPickers.length; i++) {
+            if (betPickers[i].toggled() === true) throw new Error("initializeBetPicker cannot have a betPicker with toggled = true; betPickerIndex:" + i);
+            if (betPickers[i].disabled() === false) throw new Error("initializeBetPicker cannot have a betPicker with disabled = false; betPickerIndex:" + i);
         }
-        else {
-            this.updateDomYourBetPicker(userGameSelection, 1, -1, toggleClass);
-            //this.updateDomYourBetPicker(userGameSelection, 2, -1, toggleClass);
-            //this.updateDomYourBetPicker(userGameSelection, 3, -1, toggleClass);
-            //this.updateDomYourBetPicker(userGameSelection, 4, -1, toggleClass);
-            //this.updateDomYourBetPicker(userGameSelection, 5, -1, toggleClass);
-        }
-    },
 
-    resetAllOtherBetsToOne: function (viewModel, toggleBetClass) {
-        for (var i = 0; i < viewModel.userGameSelections().length; i++) {
-            var ugs = viewModel.userGameSelections()[i];
+        self.enableBetPicker(betPickers[bet - 1], bet, selectionDisabled);
+    };
 
-            // first just disable all bet pickers just in case
-            this.updateDomYourBetPicker(ugs, -1, 1, toggleBetClass);
-            this.updateDomYourBetPicker(ugs, -1, 2, toggleBetClass);
-            this.updateDomYourBetPicker(ugs, -1, 3, toggleBetClass);
-            this.updateDomYourBetPicker(ugs, -1, 4, toggleBetClass);
-            this.updateDomYourBetPicker(ugs, -1, 5, toggleBetClass);
+    /**
+    */
+    self.resetAllOtherBetsToOne = function (gameRows, toggleBetClass, selectionDisabledForThisGameFilter) {
+        if (self.debugLevel > 0) console.log("resetAllOtherBetsToOne");
+        self.assertNotUndefinedOrNull(gameRows, "resetAllOtherBetsToOne", "gameRows");
+        self.assertNotUndefinedOrNull(toggleBetClass, "resetAllOtherBetsToOne", "toggleBetClass");
+        self.assertNotUndefinedOrNull(selectionDisabledForThisGameFilter, "resetAllOtherBetsToOne", "selectionDisabledForThisGameFilter");
 
+        for (var i = 0; i < gameRows.length; i++) {
+            var gameRow = gameRows[i];
+            var ugs = gameRow.userGameSelection;
+            var betPickers = gameRow.betPickers;
+
+            var selectionDisabled = selectionDisabledForThisGameFilter || ugs.saved;
+
+            // first just disable all bet pickers
+            self.disableAllBetPickers(betPickers, gameRow.userGameSelection.gameSpread.game.gameId);
+
+            // then set any game row that had a bet back to 1
             if (ugs.bet > 0) {
                 ugs.bet = 1;
-                for (var x = 0; x <= ugs.maxGameBet; x++) {
-                    this.updateDomYourBetPicker(ugs, x, -1, toggleBetClass);
-                }
+                self.enableBetPicker(betPickers[ugs.bet - 1], ugs.bet, selectionDisabled);
             }
         }
-    },
+    };
 
-    calculateInitialMinMaxBet: function (userGameSelection) {
+    /**
+     * initializeMinMaxBet initializes the min/max bet to either 0 if there is no bet or 1 if there is a bet 
+     * @param userGameSelection    The user game selection and its bet
+     * @output  sets the following:
+     *              userGameSelection.minGameBet;
+     *              userGameSelection.maxGameBet;
+     */
+    self.initializeMinMaxBet = function (userGameSelection) {
+        if (self.debugLevel > 0) console.log("initializeMinMaxBet");
+        self.assertNotUndefinedOrNull(userGameSelection, "initializeMinMaxBet", "userGameSelection");
+
         if (userGameSelection.bet === 0) {
             userGameSelection.minGameBet = 0;
             userGameSelection.maxGameBet = 0;
@@ -185,197 +273,239 @@ var selectionViewModel = {
             userGameSelection.minGameBet = 1;
             userGameSelection.maxGameBet = 1;
         }
+    };
 
-        //this.updateDomYourMinGameBet(userGameSelection);// todo, update this to use observable
-        //this.updateDomYourMaxGameBet(userGameSelection);// todo, update this to use observable
-    },
+    /**
+     * calculateTotalValues will calculate the total values (spentPoints, placeBets, bonusPoints, totalPoints) based on the bets places.  
+     * @param gameRows    List of game row selections and their bets
+     * @param MINSPENTPOINTSFORANYONEWEEK  The minimum points needed to be spent for a week (CONSTANT)
+     * @param EXTRAPOINTFACTORPERBETOVERMIN  The extra point factor added to bonusPoints when spent over the minimum (CONSTANT)
+     * @output  sets the following:
+     *              self.placedBets;
+     *              self.spentPoints;
+     *              self.bonusPoints;
+     */
+    self.calculateTotalValues = function (gameRows, MINSPENTPOINTSFORANYONEWEEK, EXTRAPOINTFACTORPERBETOVERMIN) {
+        if (self.debugLevel > 0) console.log("calculateTotalValues");
+        self.assertNotUndefinedOrNull(gameRows, "calculateTotalValues", "gameRows");
+        self.assertNotUndefinedOrNull(MINSPENTPOINTSFORANYONEWEEK, "calculateTotalValues", "MINSPENTPOINTSFORANYONEWEEK");
+        self.assertNotUndefinedOrNull(EXTRAPOINTFACTORPERBETOVERMIN, "calculateTotalValues", "EXTRAPOINTFACTORPERBETOVERMIN");
 
-    calculateTotalValues: function (viewModel) {
         var spentPointsLocal = 0;
         var placedBetsLocal = 0;
         var bonusPointsLocal = 0;
         var totalPointsLocal = 0;
 
-        var minSpentPointsForAnyOneWeekLocal = viewModel.minSpentPointsForAnyOneWeek();
-        var bonusPointsAllottedPerBetOverMinLocal = viewModel.bonusPointsAllottedPerBetOverMin();
+        for (var i = 0; i < gameRows.length; i++) {
 
-
-
-        for (var i = 0; i < viewModel.userGameSelections().length; i++) {
-
-            var ugs = viewModel.userGameSelections()[i];
+            var ugs = gameRows[i].userGameSelection;
             var betLocal = ugs.bet;
 
             spentPointsLocal = spentPointsLocal + betLocal;
             if (betLocal > 0) {
                 placedBetsLocal = placedBetsLocal + 1;
             }
-
-            // determine bonus points
-            if (betLocal > 0) {
-                // there must be a bet to consider giving bonus points
-                if (spentPointsLocal > minSpentPointsForAnyOneWeekLocal) {
-                    // if there are the minumum bets already, then add bonus points
-                    bonusPointsLocal = bonusPointsLocal + bonusPointsAllottedPerBetOverMinLocal;
-                }
-                else {
-                    // otherwise bonus points still equal 0
-                    bonusPointsLocal = 0;
-                }
-            }
-            //else {
-            //    if (placedBetsLocal <= minSpentPointsForAnyOneWeekLocal) {
-            //        bonusPointsLocal = minSpentPointsForAnyOneWeekLocal;
-            //    }
-            //}
         }
 
         // there must be more bets than the min required to consider giving bonus points
-        if (spentPointsLocal > minSpentPointsForAnyOneWeekLocal) {
+        if (spentPointsLocal > MINSPENTPOINTSFORANYONEWEEK) {
             // if there are the minumum bets already, then add bonus points
-            totalPointsLocal = placedBetsLocal + (placedBetsLocal - minSpentPointsForAnyOneWeekLocal) * bonusPointsAllottedPerBetOverMinLocal;
-        }
-        else {
+            totalPointsLocal = placedBetsLocal + (placedBetsLocal - MINSPENTPOINTSFORANYONEWEEK) * EXTRAPOINTFACTORPERBETOVERMIN;
+        } else {
             // otherwise bonus points still equal 0
             totalPointsLocal = placedBetsLocal;
         }
 
         bonusPointsLocal = totalPointsLocal - spentPointsLocal;
 
-        viewModel.placedBets(placedBetsLocal);
-        viewModel.spentPoints(spentPointsLocal);
-        viewModel.bonusPoints(bonusPointsLocal);
-    },
+        self.placedBets(placedBetsLocal);
+        self.spentPoints(spentPointsLocal);
+        self.bonusPoints(bonusPointsLocal);
+    };
 
-    calculateMaxPossibleBetForAnyGameThisWeek: function (viewModel) {
+    /**
+     * calculateMaxPossibleAdditionalBetForAnyGameThisWeek will calculate the max possible bet for any game this week based on business rules around how many 
+     * bonus points there are relative to the max bet for any one game.  
+     * @param bonusPoints  The number of bonus points not spent already
+     * @param MAXBETFORANYONEGAME  The max bet allowed for any one game (CONSTANT)
+     * @output  sets the following:
+     *              self.maxPossibleAdditionalBetForAnyGameThisWeek;
+     */
+    self.calculateMaxPossibleAdditionalBetForAnyGameThisWeek = function (bonusPoints, MAXBETFORANYONEGAME) {
+        if (self.debugLevel > 0) console.log("calculateMaxPossibleAdditionalBetForAnyGameThisWeek");
+        self.assertNotUndefinedOrNull(bonusPoints, "calculateMaxPossibleAdditionalBetForAnyGameThisWeek", "bonusPoints");
+        self.assertNotUndefinedOrNull(MAXBETFORANYONEGAME, "calculateMaxPossibleAdditionalBetForAnyGameThisWeek", "MAXBETFORANYONEGAME");
 
-        var bonusPointsLocal = viewModel.bonusPoints();
-        var spentPointsLocal = viewModel.spentPoints();
-        var placedBetsLocal = viewModel.placedBets();
-        var bonusPointsLocal = viewModel.bonusPoints();
-        var maxBetForAnyOneGameLocal = viewModel.maxBetForAnyOneGame();
-        var minSpentPointsForAnyOneWeekLocal = viewModel.minSpentPointsForAnyOneWeek();
-        var bonusPointsAllottedPerBetOverMinLocal = viewModel.bonusPointsAllottedPerBetOverMin();
-        var maxPossibleBetForAnyGameThisWeekLocal = 0;
+        var maxPossibleAdditionalBetForAnyGameThisWeekLocal = 0;
 
-        for (var i = 0; i < viewModel.userGameSelections().length; i++) {
-            var ugs = viewModel.userGameSelections()[i];
-
-            //if (spentPointsLocal <= minSpentPointsForAnyOneWeekLocal) {
-            if (bonusPointsLocal <= 0) {
-                // if you haven't spent the required minumum points, 
-                // then there will not be any bonus points to spend, 
-                // set max possible bet for any game this week to 1
-                maxPossibleBetForAnyGameThisWeekLocal = 1;
-            }
-            else if (bonusPointsLocal  >= maxBetForAnyOneGameLocal) {
-                // if you have more bonus points to spend on a bet than what is allowed on any one game, 
-                // then set max possible bet for any game this week to game max bet for any one game
-                maxPossibleBetForAnyGameThisWeekLocal = maxBetForAnyOneGameLocal;
-            }
-            else {
-                // else the max possible bet is set to the remaining bonus points
-                maxPossibleBetForAnyGameThisWeekLocal = bonusPointsLocal + 1;
-            }
-
-            viewModel.maxPossibleBetForAnyGameThisWeek(maxPossibleBetForAnyGameThisWeekLocal);
+        //if (spentPointsLocal <= viewModel.MINSPENTPOINTSFORANYONEWEEK) {
+        if (bonusPoints <= 0) {
+            // if you haven't spent the required minumum points, 
+            // then there will not be any bonus points to spend, 
+            // set max possible bet for any game this week to 1
+            maxPossibleAdditionalBetForAnyGameThisWeekLocal = 0;
+        } else if (bonusPoints >= MAXBETFORANYONEGAME) {
+            // if you have more bonus points to spend on a bet than what is allowed on any one game, 
+            // then set max possible bet for any game this week to game max bet for any one game
+            maxPossibleAdditionalBetForAnyGameThisWeekLocal = MAXBETFORANYONEGAME;
+        /*} else if ( {
+            // else the max possible bet is set to the remaining bonus points (+ 1 since there is already a bet of 1)
+            maxPossibleAdditionalBetForAnyGameThisWeekLocal = bonusPoints + 1;*/
+        } else {
+            // else the max possible bet is set to the remaining bonus points (+ 1 since there is already a bet of 1)
+                maxPossibleAdditionalBetForAnyGameThisWeekLocal = bonusPoints;
         }
-    },
 
-    calculateMaxPossibleBetForThisGame: function (userGameSelection, viewModel) {
+        self.maxPossibleAdditionalBetForAnyGameThisWeek(maxPossibleAdditionalBetForAnyGameThisWeekLocal);
+    };
 
+    /**
+     * calculateMaxPossibleBetForEachGame will calculate the max possible bet for each game based on business rules around how many 
+     * points have been spent (betted) and the max possible bet for any game this week  
+     * @param gameRows    List of game row selections and their bets
+     * @param maxPossibleAdditionalBetForAnyGameThisWeek  The max possible additional bet (beyond any existing bet) for any game this week
+     * @output  sets the following:
+     *              userGameSelection.maxGameBet (for each userGameSelection)
+     */
+    self.calculateMaxPossibleBetForEachGame = function (gameRows, maxPossibleAdditionalBetForAnyGameThisWeek, MAXBETFORANYONEGAME) {
+        if (self.debugLevel > 0) console.log("calculateMaxPossibleBetForEachGame");
+        self.assertNotUndefinedOrNull(gameRows, "calculateMaxPossibleBetForEachGame", "gameRows");
+        self.assertNotUndefinedOrNull(maxPossibleAdditionalBetForAnyGameThisWeek, "calculateMaxPossibleBetForEachGame", "maxPossibleAdditionalBetForAnyGameThisWeek");
+        self.assertNotUndefinedOrNull(MAXBETFORANYONEGAME, "calculateMaxPossibleBetForEachGame", "MAXBETFORANYONEGAME");
+
+        console.log("maxPossibleAdditionalBetForAnyGameThisWeek:" + maxPossibleAdditionalBetForAnyGameThisWeek);
+        console.log("MAXBETFORANYONEGAME:" + MAXBETFORANYONEGAME);
         var maxGameBetLocal = 0;
-        var maxPossibleBetForAnyGameThisWeekLocal = viewModel.maxPossibleBetForAnyGameThisWeek();
 
-        for (var i = 0; i < viewModel.userGameSelections().length; i++) {
-            var ugs = viewModel.userGameSelections()[i];
+        for (var i = 0; i < gameRows.length; i++) {
+            var ugs = gameRows[i].userGameSelection;
 
-            var betLocal = ugs.bet;
-
-            if (betLocal === 0) {
-                // if there is no bet, then the max bet has to be 0
-                maxGameBetLocal = 0;
-            }
-            else if (betLocal > maxPossibleBetForAnyGameThisWeekLocal) {
-                // if any game is already higher than the max bet, then those spent points were already factored in to that max bet as spent already...so set the max game bet to the current bet
-                maxGameBetLocal = betLocal;
-            }
-            else {
-                // otherwise set to max bet of this week
-                maxGameBetLocal = maxPossibleBetForAnyGameThisWeekLocal;
-            }
-            ugs.maxGameBet = maxGameBetLocal;
-            //this.updateDomYourMaxGameBet(ugs);
+            self.calculateMaxPossibleBetForOneGame(ugs, maxPossibleAdditionalBetForAnyGameThisWeek, MAXBETFORANYONEGAME);
         }
-    },
+    };
 
-    updateDomToggledButtonElement: function (element, toggledClass) {
+    self.calculateMaxPossibleBetForOneGame = function (userGameSelection, maxPossibleAdditionalBetForAnyGameThisWeek, MAXBETFORANYONEGAME) {
+        if (self.debugLevel > 0) console.log("calculateMaxPossibleBetForOneGame");
+        self.assertNotUndefinedOrNull(userGameSelection, "calculateMaxPossibleBetForOneGame", "userGameSelection");
+        self.assertNotUndefinedOrNull(maxPossibleAdditionalBetForAnyGameThisWeek, "calculateMaxPossibleBetForOneGame", "maxPossibleAdditionalBetForAnyGameThisWeek");
+        self.assertNotUndefinedOrNull(MAXBETFORANYONEGAME, "calculateMaxPossibleBetForOneGame", "MAXBETFORANYONEGAME");
+        
+        var maxGameBetLocal = 0;
+        var betLocal = userGameSelection.bet;
 
-        var isToggled = $(element).hasClass("active");
+        if (betLocal === 0) {
+            // if there is no bet, then the max bet has to be 0
+            maxGameBetLocal = 0;
+        } else if (betLocal + maxPossibleAdditionalBetForAnyGameThisWeek > MAXBETFORANYONEGAME) {
+            // if the possible additional points would put the bet pass the max for any one game, then set to max for any one game
+            maxGameBetLocal = MAXBETFORANYONEGAME;
+        /*} else if (betLocal > maxPossibleAdditionalBetForAnyGameThisWeek) {
+            // if any game is already higher than the max bet, then those spent points were already factored in to that max bet as spent already...so set the max game bet to the current bet
+            maxGameBetLocal = betLocal;*/
+        } else {
+            // otherwise set to max additional points plus any already spent
+            maxGameBetLocal = betLocal + maxPossibleAdditionalBetForAnyGameThisWeek;
+        };
 
-        if (isToggled) {
-            // there is nothing to do since it is already toggled
-        }
-        else {
-            // toggle the button...visually
-            $(element).button('toggle');
-            $(element).addClass(toggledClass);
+        userGameSelection.maxGameBet = maxGameBetLocal;
+    };
 
-            // untoggle the other button(s)...visually...if active
-            var btnGroup = element.parentElement;
-            var otherToggledButtons = $(btnGroup).find(".active").filter(function(index){
-                return $(this).attr("id") != $(element).attr("id");
-            });
-            for (var i = 0; i < otherToggledButtons.length; i++) {
-                var otherButton = otherToggledButtons[i];
-                $(otherButton).button('toggle');
-                $(otherButton).removeClass(toggledClass);
+    /** 
+    * disableAllBetPickers will disable all bet pickers
+    * @param betPickers The data that represents the betting min to max range for the particular game
+    * @output   Disabled bet pickers 
+    */
+    self.disableAllBetPickers = function (betPickers, gameRowId) {
+        if (self.debugLevel > 0) console.log("disableAllBetPickers for gameRow:" + gameRowId);
+        self.assertNotUndefinedOrNull(betPickers, "disableAllBetPickers", "betPickers");
+
+        for (var i = 0; i < betPickers.length; i++) {
+            var betPicker = betPickers[i];
+
+            self.disableBetPicker(betPicker);
+        };
+    };
+
+    /** 
+     * disableBetPicker will disable the bet picker
+     * @param betPicker The data that represents a specific betting min to max range for the particular game
+     * @output   Disabled bet picker
+     */
+    self.disableBetPicker = function (betPicker) {
+        if (self.debugLevel > 1) console.log("disableBetPicker");
+        self.assertNotUndefinedOrNull(betPicker, "disableBetPicker", "betPicker");
+
+        betPicker.disabled(true);
+        betPicker.toggled(false);
+    };
+
+    /** 
+    * enableAllBetPickers will enable all bet pickers unless the selection is disabled; it will also toggle the bet picker that
+    * matches the current bet
+    * @param betPickers The data that represents the betting min to max range for the particular game
+    * @param bet    The current bet to toggle
+    * @param selectionDisabled  A flag indicating whether all bet pickers should be disabled (when true) or enabled (when false)
+    * @output   Toggles bet picker matching the bet and enables or disables the bet pickers based on selectionDisabled 
+    */
+    self.enableAllBetPickers = function (betPickers, bet, selectionDisabled) {
+        if (self.debugLevel > 0) console.log("enableAllBetPickers");
+        self.assertNotUndefinedOrNull(betPickers, "enableAllBetPickers", "betPickers");
+        self.assertNotUndefinedOrNull(bet, "enableAllBetPickers", "bet");
+        self.assertNotUndefinedOrNull(selectionDisabled, "enableAllBetPickers", "selectionDisabled");
+
+        var betFound = false;
+
+        for (var i = 0; i < betPickers.length; i++) {
+
+            if (betPickers[i].betValue === bet) betFound = true;
+
+            var betPicker = betPickers[i];
+
+            if (self.debugLevel = 1) {
+                // remove the additional logging since already going to enable entire week 
+                self.debugLevel = 0;
+                self.enableBetPicker(betPicker, bet, selectionDisabled);
+                self.debugLevel = 1;
+            } else {
+                self.enableBetPicker(betPicker, bet, selectionDisabled);
             }
+        };
+
+        if (betFound === false) throw new Error("bet does not exist in betPickers; bet:" + bet);
+    };
+
+    /** 
+    * enableBetPicker will enable the bet picker unless the selection is disabled; it will also toggle the bet picker if it
+    * matches the current bet
+    * @param betPicker The data that represents a specific betting min to max range for the particular game
+    * @param bet    The current bet to toggle
+    * @param selectionDisabled  A flag indicating whether all bet pickers should be disabled (when true) or enabled (when false)
+    * @output   Toggles bet picker matching the bet and enables or disables the bet picker based on selectionDisabled 
+    */
+    self.enableBetPicker = function (betPicker, bet, selectionDisabled) {
+        if (self.debugLevel > 0) console.log("enableBetPicker for bet:" + bet);
+        self.assertNotUndefinedOrNull(betPicker, "enableBetPicker", "betPicker");
+        self.assertNotUndefinedOrNull(bet, "enableBetPicker", "bet");
+        self.assertNotUndefinedOrNull(selectionDisabled, "enableBetPicker", "selectionDisabled");
+
+        // TODO move that to KO Computed 
+        if (bet === betPicker.betValue) {
+            // only activate/toggle it if it matches the bet value
+            betPicker.toggled(true);
+        } else {
+            betPicker.toggled(false);
+        };
+        
+        if (selectionDisabled) {
+            // its supposed to be disabled, so disable it
+            betPicker.disabled(true);
+        } else {
+            betPicker.disabled(false);
         }
-    },
-    //updateDomYourBet: function (userGameSelection) {
-        //$("#yourBet" + userGameSelection.userGameSelectionId).text(userGameSelection.bet);// todo, update this to use observable
-    //},
-    updateDomYourBetPicker: function (userGameSelection, betToEnable, betToDisable, toggleBetClass) {
+    };
 
-        if (betToEnable > -1) {
-            var betEnableElement = $("#yourBetB" + betToEnable + "G" + userGameSelection.userGameSelectionId);
-
-            // first enable the bet
-            $(betEnableElement).removeAttr("disabled");
-
-            if (betToEnable === userGameSelection.bet) {
-                // if it equals the current bet
-
-                // set to active by toggling it
-                $(betEnableElement).button('toggle');
-
-                // add the toggle class, if it doesn't exist already
-                if (!$(betEnableElement).hasClass(toggleBetClass)) {
-                    $(betEnableElement).addClass(toggleBetClass);
-                }
-            }
-        }
-
-
-        if (betToDisable > -1) {
-            var betDisableElement = $("#yourBetB" + betToDisable + "G" + userGameSelection.userGameSelectionId);
-
-            // first disable the bet
-            $(betDisableElement).attr("disabled", "disabled");
-
-            // remove the toggle class, if it exist already
-            if ($(betDisableElement).hasClass(toggleBetClass)) {
-                $(betDisableElement).removeClass(toggleBetClass);
-            }
-
-            // remove the active class, if it exist already
-            if ($(betDisableElement).hasClass("active")) {
-                $(betDisableElement).removeClass("active");
-            }
-        }
-    },
-    updateDomYourSelectionPicker: function (userGameSelection, element, toggleEnableClass, toggleDisableClass1, toggleDisableClass2, toggleRowClass, toggleDisableRowClass1, toggleDisableRowClass2) {
+    self.updateDomYourSelectionPicker = function (userGameSelection, element, toggleEnableClass, toggleDisableClass1, toggleDisableClass2, toggleRowClass, toggleDisableRowClass1, toggleDisableRowClass2) {
+        if (self.debugLevel > 0) console.log("updateDomYourSelectionPicker");
 
         // toggle the target element
         $(element).button('toggle');
@@ -422,18 +552,82 @@ var selectionViewModel = {
         }
 
 
-    },
-    //updateDomYourMinGameBet: function (userGameSelection) {
-        //$("#yourMinGameBet" + userGameSelection.userGameSelectionId).text(userGameSelection.minGameBet);// todo, update this to use observable
-    //},
-    //updateDomYourMaxGameBet: function (userGameSelection) {
-        //$("#yourMaxGameBet" + userGameSelection.userGameSelectionId).text(userGameSelection.maxGameBet);// todo, update this to use observable
-    //}
-    userSelectedSave: function (data, event) {
+    };
+
+    self.userSelectedSave = function (data, event) {
+        if (self.debugLevel > 0) console.log("userSelectedSave");
+
         $.ajax("/Selection/Save", {
-            data: ko.toJSON({ userGameSelections: this.userGameSelections }),
+            data: ko.toJSON({ selection: self }),
             type: "post", contentType: "application/json",
-            success: function(result) { alert(result) }
+            success: function (result) { alert(result) }
         });
-    }
+    };
+
+    self.initializeAfterDataLoad = function () {
+        self.calculateAllOtherVariables(self);
+    };
+
+    self.calculateSelectionDisabled = function (gameRowsHaveBeenSaved, selectionDisabledForThisGameFilter, userGameSelectionSaved) {
+        var disabled = gameRowsHaveBeenSaved || selectionDisabledForThisGameFilter || userGameSelectionSaved;
+        self.selectionDisabled(disabled);
+    };
+    self.assertNotUndefinedOrNull = function (toTest, functionName, variableName) {
+
+        if (typeof toTest === "undefined") throw new Error(variableName + " passed to " + functionName + " is undefined");
+        if (toTest === null) throw new Error(variableName + " passed to " + functionName + " is null");
+    };
+
+    //self.initializeAfterDataLoad();
 }
+
+
+var selectionGameRowsViewModel = function (data) {
+    var self = this;
+
+    if (typeof data === "undefined") throw new Error("data passed to selectionGameRowsViewModel is undefined");
+    if (data === null) throw new Error("data passed to selectionGameRowsViewModel is null");
+
+    self.gameRows = [];
+
+    for (var i = 0; i < data.length; i++) {
+        self.gameRows.push(new gameRow(data[i]));
+    };
+};
+
+var gameRow = function (data) {
+    var self = this;
+
+    if (typeof data === "undefined") throw new Error("data passed to gameRow is undefined");
+    if (data === null) throw new Error("data passed to gameRow is null");
+
+    self.userGameSelection = data.userGameSelection;
+    self.selectionPicker = new selectionPicker(data.selectionPicker);
+    self.betPickers = [];
+    
+    for (var i=0; i<data.betPickers.length; i++) {
+        self.betPickers.push(new betPicker(data.betPickers[i]));
+    };
+};
+
+var betPicker = function (data) {
+    var self = this;
+
+    if (typeof data === "undefined") throw new Error("data passed to betPicker is undefined");
+    if (data === null) throw new Error("data passed to betPicker is null");
+
+    self.disabled = ko.observable(data.disabled);
+    self.toggled = ko.observable(data.toggled);
+    self.betValue = data.betValue;
+};
+
+var selectionPicker = function (data) {
+    var self = this;
+
+    if (typeof data === "undefined") throw new Error("data passed to selectionPicker is undefined");
+    if (data === null) throw new Error("data passed to selectionPicker is null");
+
+    self.disabled = ko.observable(data.disabled);
+    self.toggled = ko.observable(data.toggled);
+    self.selectionValue = ko.observable(data.selectionValue);
+};

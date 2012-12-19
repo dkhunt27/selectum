@@ -6,25 +6,26 @@
 
 <h2>Index</h2>
 
+<div>
+    @Html.DropDownList("GameFilters")
+</div>
+
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
 <table>
     <tr>
-        <th>
+        @*<th>
             @Html.DisplayNameFor(model => model.GameFilter.GameFilterName)
-        </th>
+        </th>*@
         <th>
             @Html.DisplayNameFor(model => model.GameDateTime)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.FavoriteTeam.TeamLongName)
+            @Html.DisplayNameFor(model => model.Team1.TeamLongName)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.UnderdogTeamId)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Spread)
+            @Html.DisplayNameFor(model => model.Team2.TeamLongName)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.HomeTeam)
@@ -41,13 +42,10 @@
             @Html.DisplayFor(modelItem => item.GameDateTime)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.FavoriteTeam.TeamLongName)
+            @Html.DisplayFor(modelItem => item.Team1.TeamLongName)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.UnderdogTeamId)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Spread)
+            @Html.DisplayFor(modelItem => item.Team2.TeamLongName)
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.HomeTeam)

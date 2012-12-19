@@ -1,0 +1,67 @@
+﻿@model IEnumerable<Selectum.Models.Game>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<div class="navbar">
+  <div class="navbar-inner">
+    <a class="brand">Results</a>
+    <ul class="nav">
+        <li>
+            <a>Week</a>
+        </li>
+        @foreach (var gameFilter in ViewBag.GameFilters)
+        {
+            var active = "";
+            if (gameFilter.Selected)
+            {
+                active = "active";
+            }
+            var href = "/Game/GameFilter/" + @gameFilter.Value;
+        <li>
+            <a class="@active" href="@href">
+                @gameFilter.Value
+            </a>   
+        </li>
+        }
+    </ul>
+  </div>
+</div>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+
+@using (Html.BeginForm()) {
+@*    @Html.ValidationSummary(true)
+
+    *@<table>
+        <tr>
+            <th>
+                Game Filter
+            </th>
+            <th>
+                Game Time
+            </th>
+            <th>
+                Team1
+            </th>
+            <th>
+                Team2
+            </th>
+            <th>
+                Home Team
+            </th>
+        </tr>
+
+        @Html.EditorFor(model => model)
+
+    </table>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

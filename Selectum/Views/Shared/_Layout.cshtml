@@ -1,55 +1,69 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <title>@ViewBag.Title - My ASP.NET MVC Application</title>
-        <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-        <meta name="viewport" content="width=device-width" />
-        @Styles.Render("~/Content/css")
-        @Scripts.Render("~/bundles/modernizr")
-        <link rel='stylesheet' href='~/Content/bootstrap.min.css' />
-        @*<script type="text/javascript" src="~/Scripts/bootstrap.js" />*@
-    </head>
-    <body>
-        <header>
-            <div class="content-wrapper">
-                <div class="float-left">
-                    <p class="site-title">@Html.ActionLink("your logo here", "Index", "Home")</p>
-                </div>
-                <div class="float-right">
-                    <section id="login">
-                        @Html.Partial("_LoginPartial")
-                    </section>
-                    <nav>
-                        <ul id="menu">
-                            <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                            <li>@Html.ActionLink("Selections", "Index", "Selection")</li>
-                            <li>@Html.ActionLink("Teams", "Index", "Team")</li>
-                            <li>@Html.ActionLink("Game Filters", "Index", "GameFilter")</li>
-                            <li>@Html.ActionLink("Games", "Index", "Game")</li>
-                            <li>@Html.ActionLink("Teams", "Index", "Team")</li>
-                            <li>@Html.ActionLink("About", "About", "Home")</li>
-                            <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                        </ul>
-                    </nav>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>    
+    <link href="@Url.Content("~/Content/bootstrap.min.css")" rel="stylesheet" type="text/css" />
+    @*<link href="@Url.Content("~/Content/bootstrap-responsive.min.css")" rel="stylesheet" type="text/css" />*@
+    <link href="@Url.Content("~/Content/site.css")" rel="stylesheet" type="text/css" />
+    @Scripts.Render("~/Scripts/Libs/jquery-1.8.3.js")
+    @Scripts.Render("~/Scripts/Libs/jquery.validate.min.js")
+    @Scripts.Render("~/Scripts/Libs/bootstrap.min.js")
+    @Scripts.Render("~/Scripts/Libs/knockout-2.2.0.debug.js")
+    @Scripts.Render("~/Scripts/Libs/modernizr-2.5.3.js")
+    <!--style type="text/css">
+        body {
+            padding-top: 60px;
+            padding-bottom: 40px;
+        }
+    </style-->
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="navbar navbar-static-top">
+                <div class="navbar-inner">
+                    <a class="brand disabled">Selectum</a>
+                    <ul class="nav" role="navigation">
+                        <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                        <li>@Html.ActionLink("Selections", "Index", "Selection")</li>
+                        <li>@Html.ActionLink("Weekly Results", "Index", "ResultsByGame")</li>
+                        <li>@Html.ActionLink("Standings", "Index", "OverallResultsByGameFilter")</li>
+                        <li class="dropdown">
+                            <a id="admindd" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="admindd">
+                                <li>@Html.ActionLink("Processes", "GameFilter", "Admin")</li>
+                                <li class="divider"></li>
+                                <li>@Html.ActionLink("Teams", "Index", "Team")</li>
+                                <li>@Html.ActionLink("Game Filters", "Index", "GameFilter")</li>
+                                <li>@Html.ActionLink("Games", "Index", "Game")</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul class="nav pull-right">
+                        <li>@Html.ActionLink("About", "About", "Home")</li>
+                        @*<li>@Html.ActionLink("Contact", "Contact", "Home")</li>*@
+                        <li>
+                            <ul class="nav pull-right secondary-nav">
+                                <li>@Html.Partial("_LoginPartial")</li>
+                            </ul>
+                        </li>
+                    </ul>
                 </div>
             </div>
-        </header>
-        <div id="body" class="row">
-            @RenderSection("featured", required: false)
-            <section class="content-wrapper main-content clear-fix">
-                @RenderBody()
-            </section>
         </div>
-        <footer>
-            <div class="content-wrapper">
-                <div class="float-left">
-                    <p>&copy; @DateTime.Now.Year - My ASP.NET MVC Application</p>
-                </div>
+        <div class="row">
+            <div id="body">
+                @RenderSection("featured", required: false)
+                <section class="content-wrapper main-content clear-fix">
+                    @RenderBody()
+                </section>
             </div>
-        </footer>
-
-        @Scripts.Render("~/bundles/jquery")
-        @RenderSection("scripts", required: false)
-    </body>
+            <footer class="footer">
+                <p>&copy; dkhunt27 2012</p>
+            </footer>
+        </div>
+    </div>
+    @RenderSection("scripts", required: false)
+</body>
 </html>

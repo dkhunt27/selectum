@@ -1,0 +1,23 @@
+﻿@model Selectum.Models.Game
+@{
+    Layout = null;
+}
+<tr>
+    <td>
+        @Html.EditorFor(x => x.GameFilter.GameFilterName)
+    </td>
+    <td>
+        @Html.EditorFor(x => x.GameDateTime)
+    </td>
+    <td>
+        @Html.EditorFor(x => x.Team1.TeamLongName)
+    </td>
+    <td>
+        @Html.EditorFor(x => x.Team2.TeamLongName)
+    </td>
+    <td>
+        @Html.EditorFor(x => x.HomeTeam)
+    </td>
+</tr>
+
+

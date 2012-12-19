@@ -17,21 +17,22 @@ namespace Selectum.Models
             return userGameSelections.Count(ugs => ugs.Bet > 0);
         }
 
-        public int GetAvailablePoints(List<UserGameSelection> userGameSelections, int minSpentPointsForAnyOneWeek, int extraPointFactorPerBetOverMin)
+        public int GetBonusPoints(List<UserGameSelection> userGameSelections, int minSpentPointsForAnyOneWeek, int extraPointFactorPerBetOverMin)
         {
-            int availablePoints = 0;
+            int bonusPoints = 0;
             int placedBets = GetPlacedBets(userGameSelections);
 
             if (placedBets < minSpentPointsForAnyOneWeek)
             {
-                availablePoints = minSpentPointsForAnyOneWeek;
+                //bonusPoints = minSpentPointsForAnyOneWeek;
+                bonusPoints = 0;
             }
             else
             {
-                availablePoints = minSpentPointsForAnyOneWeek + (placedBets - minSpentPointsForAnyOneWeek) * extraPointFactorPerBetOverMin;
+                bonusPoints = minSpentPointsForAnyOneWeek + (placedBets - minSpentPointsForAnyOneWeek) * extraPointFactorPerBetOverMin;
             }
 
-            return availablePoints;
+            return bonusPoints;
         }
 
         public int GetSpentPoints(List<UserGameSelection> userGameSelections)

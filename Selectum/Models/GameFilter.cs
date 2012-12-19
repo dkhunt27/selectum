@@ -8,12 +8,15 @@ namespace Selectum.Models
 {
     public partial class GameFilter
     {
-        [Key]
+        public GameFilter()
+        {
+        }
+
         public int GameFilterId { get; set; }
         public string GameFilterName { get; set; }
         public DateTime GameFilterStartDate { get; set; }
         public DateTime GameFilterEndDate { get; set; }
-
-        //public virtual Game Game { get; set; }
+        public bool GameFilterEnabled { get; set; }
+        public bool GameFilterAvailable { get; set; }
     }
 }

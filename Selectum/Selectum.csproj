@@ -40,6 +40,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Entity" />
@@ -68,9 +72,6 @@
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.4.5.6\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http">
     </Reference>
@@ -164,14 +165,16 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\BaseGameFilteredController.cs" />
+    <Compile Include="Controllers\OverallResultsByGameFilterController.cs" />
+    <Compile Include="Controllers\ResultsByGameController.cs" />
+    <Compile Include="Controllers\GameController.cs" />
     <Compile Include="Controllers\KOTestController.cs" />
     <Compile Include="Controllers\SelectionController.cs" />
-    <Compile Include="Controllers\GameController.cs" />
     <Compile Include="Controllers\GameFilterController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\TeamController.cs" />
-    <Compile Include="Controllers\UserGameSelectionController.cs" />
-    <Compile Include="Controllers\UserTaskSelectionController.cs" />
+    <Compile Include="Controllers\ResultsByUserController.cs" />
     <Compile Include="DAL\SelectumContext.cs" />
     <Compile Include="DAL\SelectumInitializer.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
@@ -179,14 +182,25 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountModels.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Models\Log.cs" />
+    <Compile Include="Models\Season.cs" />
+    <Compile Include="Models\UserResult.cs" />
+    <Compile Include="ViewModels\OverallResultByGameFilter.cs" />
+    <Compile Include="ViewModels\OverallResultsByGameFilter.cs" />
+    <Compile Include="ViewModels\ResultsByGame.cs" />
+    <Compile Include="ViewModels\ResultByGame.cs" />
+    <Compile Include="ViewModels\ResultByUser.cs" />
+    <Compile Include="ViewModels\ResultsByUser.cs" />
+    <Compile Include="Models\GameSpread.cs" />
     <Compile Include="Models\KOTest.cs" />
+    <Compile Include="ToJson.cs" />
     <Compile Include="Models\UserToUserProfile.cs" />
     <Compile Include="Models\User.cs" />
-    <Compile Include="Models\xProjects.cs" />
     <Compile Include="Models\UserProjectSelection.cs" />
     <Compile Include="Models\ModelDataInitializer.cs" />
     <Compile Include="Models\ModelUtilities.cs" />
-    <Compile Include="Models\Selection.cs" />
+    <Compile Include="ViewModels\Selection.cs" />
     <Compile Include="Models\Game.cs" />
     <Compile Include="Models\GameFilter.cs" />
     <Compile Include="Models\GameResult.cs" />
@@ -194,6 +208,7 @@
     <Compile Include="Models\UserGameResult.cs" />
     <Compile Include="Models\UserGameSelection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModels\SelectionGameRow.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-responsive.css" />
@@ -260,33 +275,34 @@
     <Content Include="Global.asax" />
     <Content Include="Images\glyphicons-halflings-white.png" />
     <Content Include="Images\glyphicons-halflings.png" />
-    <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
-    <None Include="Scripts\jquery.validate-vsdoc.js" />
-    <Content Include="Scripts\jquery-1.8.1.js" />
-    <Content Include="Scripts\jquery-1.8.1.min.js" />
-    <Content Include="Scripts\jquery-ui-1.8.20.js" />
-    <Content Include="Scripts\jquery-ui-1.8.20.min.js" />
-    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
-    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
-    <Content Include="Scripts\jquery.validate.js" />
-    <Content Include="Scripts\jquery.validate.min.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\knockout-2.1.0.debug.js" />
-    <Content Include="Scripts\knockout-2.1.0.js" />
-    <Content Include="Scripts\KOTest\kotestViewModel.js" />
-    <Content Include="Scripts\modernizr-2.5.3.js" />
+    <Content Include="Scripts\Libs\bootstrap.js" />
+    <Content Include="Scripts\Libs\bootstrap.min.js" />
+    <None Include="Scripts\Libs\jquery-1.8.3.intellisense.js" />
+    <Content Include="Scripts\Libs\jquery-1.8.3.js" />
+    <Content Include="Scripts\Libs\jquery-1.8.3.min.js" />
+    <Content Include="Scripts\Libs\jquery-ui-1.8.20.js" />
+    <Content Include="Scripts\Libs\jquery-ui-1.8.20.min.js" />
+    <Content Include="Scripts\Libs\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\Libs\jquery.unobtrusive-ajax.min.js" />
+    <None Include="Scripts\Libs\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\Libs\jquery.validate.js" />
+    <Content Include="Scripts\Libs\jquery.validate.min.js" />
+    <Content Include="Scripts\Libs\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\Libs\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\Libs\knockout-2.2.0.debug.js" />
+    <Content Include="Scripts\Libs\knockout-2.2.0.js" />
+    <Content Include="Scripts\Libs\knockout.mapping-latest.debug.js" />
+    <Content Include="Scripts\Libs\knockout.mapping-latest.js" />
+    <Content Include="Scripts\Libs\knockout.validation.debug.js" />
+    <Content Include="Scripts\Libs\knockout.validation.js" />
+    <Content Include="Scripts\Libs\modernizr-2.5.3.js" />
+    <Content Include="Scripts\Selection\Copy of selectionViewModel.js" />
     <Content Include="Scripts\Selection\selectionViewModel.js" />
+    <Content Include="Scripts\Tests\Copy of selectionTests.js" />
+    <Content Include="Scripts\Tests\pavlov.js" />
     <Content Include="Scripts\Tests\qunit-1.10.0.css" />
     <Content Include="Scripts\Tests\qunit-1.10.0.js" />
     <Content Include="Scripts\Tests\selectionTests.js" />
-    <Content Include="Scripts\Selection\selectionViewModelOld.js" />
-    <Content Include="Scripts\Selection\selectionCalculations.js" />
-    <Content Include="Scripts\Selection\selectionDomInteraction.js" />
-    <Content Include="Scripts\Selection\selectionEvents.js" />
-    <Content Include="Scripts\Selection\selectionLogging.js" />
-    <Content Include="Scripts\Selection\selectionObjects.js" />
     <Content Include="Scripts\Tests\Tests.html" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -296,7 +312,7 @@
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="Content\Site.css" />
-    <Content Include="Scripts\_references.js" />
+    <Content Include="Scripts\Libs\_references.js" />
     <Content Include="Images\accent.png" />
     <Content Include="Images\bullet.png" />
     <Content Include="Images\heroAccent.png" />
@@ -325,7 +341,6 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\Team\Index.cshtml" />
     <Content Include="Views\Team\Details.cshtml" />
@@ -337,32 +352,18 @@
     <Content Include="Views\GameFilter\Create.cshtml" />
     <Content Include="Views\GameFilter\Edit.cshtml" />
     <Content Include="Views\GameFilter\Delete.cshtml" />
-    <Content Include="Views\Game\Index.cshtml" />
-    <Content Include="Views\Game\Details.cshtml" />
-    <Content Include="Views\Game\Create.cshtml" />
-    <Content Include="Views\Game\Edit.cshtml" />
-    <Content Include="Views\Game\Delete.cshtml" />
-    <Content Include="Views\UserGameSelection\Details.cshtml" />
-    <Content Include="Views\UserGameSelection\Create.cshtml" />
-    <Content Include="Views\UserGameSelection\Edit.cshtml" />
-    <Content Include="Views\UserGameSelection\Delete.cshtml" />
-    <Content Include="Views\UserGameSelection\Index.cshtml" />
-    <Content Include="Views\Selection\Index.cshtml" />
-    <Content Include="Views\Shared\_BootstrapLayout1.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Selection\GameFilter.cshtml" />
-    <Content Include="Views\Selection2\Index.cshtml" />
-    <Content Include="Views\UserTaskSelection\Index.cshtml" />
-    <Content Include="Views\UserTaskSelection\Details.cshtml" />
-    <Content Include="Views\UserTaskSelection\Create.cshtml" />
-    <Content Include="Views\UserTaskSelection\Edit.cshtml" />
-    <Content Include="Views\UserTaskSelection\Delete.cshtml" />
-    <Content Include="Views\UserTaskSelection\Copy of Create.cshtml" />
     <Content Include="Views\Selection\EditorTemplates\UserGameSelection2.cshtml" />
     <Content Include="Views\Selection\EditorTemplates\UserGameSelection.cshtml" />
     <Content Include="Views\Selection\EditorTemplates\PickTeam.cshtml" />
-    <Content Include="Views\Selection\KOIndex.cshtml" />
     <Content Include="Views\KOTest\KOTest.cshtml" />
-    <Content Include="Views\Selection\KOIndex2.cshtml" />
+    <Content Include="Views\Game\GameFilter.cshtml" />
+    <Content Include="Views\Game\EditorTemplates\Game.cshtml" />
+    <Content Include="Views\ResultsByUser\GameFilter.cshtml" />
+    <Content Include="Views\ResultsByGame\GameFilter.cshtml" />
+    <Content Include="Views\Admin\GameFilter.cshtml" />
+    <Content Include="Views\OverallResultsByGameFilter\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

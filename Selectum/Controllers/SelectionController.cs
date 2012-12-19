@@ -9,140 +9,163 @@ using Selectum.Models;
 using Selectum.DAL;
 using System.Web.Security;
 using System.Data.Entity.Infrastructure;
+using Selectum.ViewModels;
 
 namespace Selectum.Controllers
 {
     //[Authorize]
-    public class SelectionController : Controller
+    public class SelectionController : BaseGameFilteredController
     {
-        private SelectumContext db = new SelectumContext();
-
-        public ActionResult KOIndex()
-        {
-            return View();
-        }
-
-        public ActionResult KOIndex2()
-        {
-            return View();
-        }
-
-        //
-        // GET: /UserGameSelection/
-
-        public ActionResult Index()
-        {
-            var utilities = new ModelUtilities();
-
-            //var now = DateTime.Today();
-            var now = new DateTime(2012, 10, 5);
-
-            var userProfileId = 1;
-            //var userProfileId = (int)Membership.GetUser().ProviderUserKey;
-            var userId = db.UserToUserProfiles.First(utup => utup.UserProfileId == userProfileId).UserId;
-
-            var gameFilters = db.GameFilters;
-            var currentGameFilter = utilities.GetGameFilterByDate(gameFilters.ToList(), now);
-            var userGameSelectionsDB = db.UserGameSelections
-                                            .Include(ugs => ugs.Game)
-                                            .Include(t => t.PickTeam)
-                                            .Include(g => g.Game.FavoriteTeam)
-                                            .Include(g => g.Game.UnderdogTeam)
-                                            .Include(u => u.User)
-                                            .Where(u => u.UserId == userId)
-                                            .Where(ugs => ugs.Game.GameFilterId == currentGameFilter.GameFilterId);
-
-            var userGameSelections = userGameSelectionsDB.ToList();
-
-            if (userGameSelections.Count == 0)
-            {
-                var games = db.Games.Include(g => g.FavoriteTeam).Include(g => g.UnderdogTeam).Where(g => g.GameFilterId == currentGameFilter.GameFilterId);
-                var noBetTeam = db.Teams.First(t => t.TeamLongName == "No Bet");
-                var user = db.Users.First(u => u.UserId == userId);
-
-                // initialize the userGameSelections with No Bets
-                foreach (var game in games)
-                {
-                    userGameSelections.Add(new UserGameSelection() { Bet = 0, GameId = game.GameId, PickTeamId = noBetTeam.TeamId, Game = game, PickTeam = noBetTeam, UserId = user.UserId, User = user });
-                }
-            }
-
-            var selection = new Selection();
-            selection.UserGameSelections = userGameSelections;
-            selection.PlacedBets = utilities.GetPlacedBets(selection.UserGameSelections);
-            selection.AvailablePoints = utilities.GetAvailablePoints(selection.UserGameSelections, selection.MinSpentPointsForAnyOneWeek, selection.ExtraPointFactorPerBetOverMin);
-            selection.SpentPoints = utilities.GetSpentPoints(selection.UserGameSelections);
-            selection.PossibleBets = utilities.GetPossibleBets(selection.UserGameSelections);
-            selection.GameFilters = gameFilters.ToList();
-            selection.CurrentGameFilter = currentGameFilter;
-
-            return View(selection);
-        }
-
-        //
-        // GET: /UserGameSelection/Details/5
-
         public ActionResult GameFilter(int id = 0)
         {
-            var utilities = new ModelUtilities();
-            var userId = 5;
-            //var userId = (int)Membership.GetUser().ProviderUserKey;
-
-            var gameFilters = db.GameFilters;
-            var currentGameFilter = db.GameFilters.First(gf => gf.GameFilterId == id);
-            var userGameSelectionsDB = db.UserGameSelections.Include(ugs => ugs.Game).Include(t => t.PickTeam).Include(g => g.Game.FavoriteTeam).Include(g => g.Game.UnderdogTeam).Include(u => u.User).Where(u => u.UserId == userId).Where(ugs => ugs.Game.GameFilterId == id);
-            
-            var userGameSelections = userGameSelectionsDB.ToList();
-
-            if (userGameSelections.Count == 0)
+            try
             {
-                var games = db.Games.Include(g => g.FavoriteTeam).Include(g => g.UnderdogTeam).Where(g => g.GameFilterId == id);
-                var noBetTeam = db.Teams.First(t => t.TeamLongName == "No Bet");
-                var user = db.Users.First(u => u.UserId == id);
-           
-                // initialize the userGameSelections with No Bets
-                foreach (var game in games)
+                int currentGameFilterId = validateGameFilterId(id);
+                SetViewBagGameFilter(currentGameFilterId);
+
+                bool selectionDisabledForThisGameFilter = !db.GameFilters.FirstOrDefault(gf => gf.GameFilterId == currentGameFilterId).GameFilterEnabled;
+
+                var utilities = new ModelUtilities();
+                var userProfileId = 2;
+                //var userProfileId = (int)Membership.GetUser().ProviderUserKey;
+                var userId = db.UserToUserProfiles.First(utup => utup.UserProfileId == userProfileId).UserId;
+
+                var userGameSelections = db.UserGameSelections
+                                                .Include(ugs => ugs.GameSpread)
+                                                .Include(t => t.PickTeam)
+                                                .Include(g => g.GameSpread.FavoriteTeam)
+                                                .Include(g => g.GameSpread.UnderdogTeam)
+                                                .Include(g => g.GameSpread.Game)
+                                                .Include(u => u.User)
+                                                .Where(u => u.UserId == userId)
+                                                .Where(ugs => ugs.GameSpread.Game.GameFilterId == currentGameFilterId)
+                                                .ToList();
+
+
+                if (userGameSelections.Count == 0)
                 {
-                    userGameSelections.Add(new UserGameSelection() { Bet = 0, GameId = game.GameId, PickTeamId = noBetTeam.TeamId, Game = game, PickTeam = noBetTeam, UserId = user.UserId, User = user });
+                    var gameSpreads = db.GameSpreads
+                                            .Include(g => g.Game)
+                                            .Include(g => g.FavoriteTeam)
+                                            .Include(g => g.UnderdogTeam)
+                                            .Where(g => g.Game.GameFilterId == currentGameFilterId);
+
+                    var noBetTeam = db.Teams.First(t => t.TeamLongName == "No Bet");
+
+                    var user = db.Users.First(u => u.UserId == userId);
+
+                    // initialize the userGameSelections with No Bets
+                    foreach (var gameSpread in gameSpreads)
+                    {
+                        userGameSelections.Add(new UserGameSelection()
+                                            {
+                                                Bet = 0,
+                                                GameSpreadId = gameSpread.GameSpreadId,
+                                                PickTeamId = noBetTeam.TeamId,
+                                                GameSpread = gameSpread,
+                                                PickTeam = noBetTeam,
+                                                UserId = user.UserId,
+                                                User = user,
+                                                Saved = false
+                                            });
+                    }
+
+                    //save the no bets to the database to initialize the usergameselectionid which is used to identify the rows in the html
+                    userGameSelections.ForEach(ugs => db.UserGameSelections.Add(ugs));
+                    db.SaveChanges();
                 }
+
+                var selection = new Selection();
+
+
+                //selection.UserGameSelections = userGameSelections;
+                selection.PlacedBets = utilities.GetPlacedBets(userGameSelections);
+                selection.BonusPoints = utilities.GetBonusPoints(userGameSelections,
+                                                                         selection.MinSpentPointsForAnyOneWeek,
+                                                                         selection.ExtraPointFactorPerBetOverMin);
+                selection.SpentPoints = utilities.GetSpentPoints(userGameSelections);
+                selection.PossibleBets = utilities.GetPossibleBets(userGameSelections);
+                selection.SelectionDisabledForThisGameFilter = selectionDisabledForThisGameFilter;
+                selection.GameRowsHaveBeenSaved = userGameSelections.Where(ugs => ugs.Saved == false).Count() == 0;  // all records are false, meaning all have been saved
+
+                var gameRows = new List<SelectionGameRow>();
+
+                foreach (var ugs in userGameSelections)
+                {
+                    var gameRow = new SelectionGameRow();
+                    /*gameRow.Bet = ugs.Bet;
+                    gameRow.GameSpread = ugs.GameSpread;
+                    gameRow.GameSpreadId = ugs.GameSpreadId;
+                    gameRow.PickTeam = ugs.PickTeam;
+                    gameRow.PickTeamId = ugs.PickTeamId;
+                    gameRow.Saved = ugs.Saved;
+                    gameRow.User = ugs.User;
+                    gameRow.UserGameSelectionId = ugs.UserGameSelectionId;
+                    gameRow.UserId = ugs.UserId;*/
+                    gameRow.UserGameSelection = ugs;
+
+                    var betPickers = new List<BetPicker>();
+
+                    for (int i = 0; i < selection.MaxBetForAnyOneGame; i++)
+                    {
+                        var betPicker = new BetPicker();
+                        betPicker.Activated = false;
+                        betPicker.Disabled = true;
+                        betPicker.Toggled = false;
+                        betPicker.BetValue = i + 1;
+
+                        betPickers.Add(betPicker);
+                    }
+
+                    gameRow.BetPickers.AddRange(betPickers);
+                    gameRows.Add(gameRow);
+                }
+
+                selection.GameRows = gameRows;
+
+
+                // validation rules
+
+                if (userGameSelections == null)
+                {
+                    throw new ArgumentException(string.Format("Missing user game selections for given GameFilterId:{0}", currentGameFilterId));
+                }
+
+                return View(selection);
             }
-
-            var selection = new Selection();
-            selection.UserGameSelections = userGameSelections;
-            selection.PlacedBets = utilities.GetPlacedBets(selection.UserGameSelections);
-            selection.AvailablePoints = utilities.GetAvailablePoints(selection.UserGameSelections, selection.MinSpentPointsForAnyOneWeek, selection.ExtraPointFactorPerBetOverMin);
-            selection.SpentPoints = utilities.GetSpentPoints(selection.UserGameSelections);
-            selection.PossibleBets = utilities.GetPossibleBets(selection.UserGameSelections);
-            selection.GameFilters = gameFilters.ToList();
-            selection.CurrentGameFilter = currentGameFilter;
-
-            if (userGameSelections == null)
+            catch (Exception ex)
             {
-                return HttpNotFound();
+                return HttpNotFound(ex.Message);
             }
-
-            return View(selection);
         }
 
         [HttpPost]
-        public JsonResult Save(List<UserGameSelection> userGameSelections)
+        public JsonResult Save(Selection selection)
         {
             var saveCount = 0;
             if (ModelState.IsValid)
             {
                 // server side validations
-                foreach (var ugs in userGameSelections)
+                foreach (var gameRow in selection.GameRows)
                 {
+                    var ugs = gameRow.UserGameSelection;
+
                     // make sure the picked team is correct
-                    if (ugs.PickTeamId != 1 && ugs.PickTeamId != ugs.Game.FavoriteTeamId && ugs.PickTeamId != ugs.Game.UnderdogTeamId)
+                    if (ugs.PickTeamId != 1 && 
+                        ugs.PickTeamId != ugs.GameSpread.FavoriteTeamId && 
+                        ugs.PickTeamId != ugs.GameSpread.UnderdogTeamId)
                     {
-                        throw new ArgumentException(string.Format("PickTeamId not valid. UserGameSelectionId:{0} PickTeamId:{1}", ugs.UserGameSelectionId, ugs.PickTeamId));
+                        throw new ArgumentException(
+                                        string.Format("PickTeamId not valid. UserGameSelectionId:{0} PickTeamId:{1}", 
+                                        ugs.UserGameSelectionId, 
+                                        ugs.PickTeamId));
                     }
                 }
 
-                
-                foreach (var ugs in userGameSelections)
+                foreach (var gameRow in selection.GameRows)
                 {
+                    var ugs = gameRow.UserGameSelection;
+                    ugs.Saved = true;  // mark this record as the user saved it
                     var existing = db.UserGameSelections.Find(ugs.UserGameSelectionId);
                     db.Entry(existing).CurrentValues.SetValues(ugs);
                     
@@ -155,12 +178,6 @@ namespace Selectum.Controllers
                 return Json(saveCount);
             }
             return Json(saveCount);
-        }
-
-        [HttpPost]
-        public ActionResult Index(Selection selection)
-        {
-            return View(selection);
         }
 
         protected override void Dispose(bool disposing)

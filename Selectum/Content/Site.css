@@ -95,7 +95,7 @@ h5, h6 {
 ----------------------------------------------------------*/
 .content-wrapper {
     margin: 0 auto;
-    max-width: 960px;
+    /*max-width: 960px;*/
 }
 
 #body {
@@ -105,17 +105,18 @@ h5, h6 {
 }
 
     .main-content {
-        background: url("../Images/accent.png") no-repeat;
+        /*background: url("../Images/accent.png") no-repeat;*/
         padding-left: 10px;
         padding-top: 30px;
     }
 
     .featured + .main-content {
-        background: url("../Images/heroAccent.png") no-repeat;
+        /*background: url("../Images/heroAccent.png") no-repeat;*/
     }
 
 header .content-wrapper {
-    padding-top: 20px; 
+    /*padding-top: 20px;*/     
+    padding-top: 5px; 
 }
 
 footer {
@@ -179,7 +180,7 @@ footer {
 
 /* menu
 ----------------------------------------------------------*/
-ul#menu {
+/*ul#menu {
     font-size: 1.3em;
     font-weight: 600;
     margin: 0 0 5px;
@@ -203,7 +204,7 @@ ul#menu {
             color: #333;
             text-decoration: none;
         }
-
+    */
 
 /* page elements
 ----------------------------------------------------------*/
@@ -527,7 +528,7 @@ input[type="checkbox"].input-validation-error {
 
 /* tables
 ----------------------------------------------------------*/
-table {
+/*table {
     border-collapse: collapse;
     border-spacing: 0;
     margin-top: 0.75em;
@@ -585,7 +586,7 @@ td {
 tr.pager td {
     padding: 0 0.25em 0 0;
 }
-
+*/
 
 /********************
 *   Mobile Styles   *

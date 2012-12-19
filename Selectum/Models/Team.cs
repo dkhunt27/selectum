@@ -16,8 +16,9 @@ namespace Selectum.Models
         }
 
         public int TeamId { get; set; }
-        public string TeamShortName { get; set; }
         public string TeamLongName { get; set; }
+        public string TeamShortName { get; set; }
+        public string TeamOtherName { get; set; }
 
         //public virtual ICollection<Game> FavoriteGames { get; set; }
         //public virtual ICollection<Game> UnderdogGames { get; set; }

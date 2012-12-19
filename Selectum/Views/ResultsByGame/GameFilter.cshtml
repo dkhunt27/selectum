@@ -1,0 +1,94 @@
+﻿@model Selectum.ViewModels.ResultsByGame
+
+@{
+    ViewBag.Title = "Results";
+}
+
+<div class="navbar">
+  <div class="navbar-inner">
+    <a class="brand disabled">Results</a>
+    <ul class="nav">
+        <li>
+            <a class="disabled">Week</a>
+        </li>
+        @foreach (var gameFilter in ViewBag.GameFilters)
+        {
+            var active = "";
+            if (gameFilter.Selected)
+            {
+                active = "active";
+            }
+            var href = "/ResultsByGame/GameFilter/" + @gameFilter.Value;
+        <li>
+            <a class="@active" href="@href">
+                @gameFilter.Value
+            </a>   
+        </li>
+        }
+    </ul>
+  </div>
+</div>
+
+<table class="table table-bordered">
+    <tr>
+        <th colspan="4">
+        </th>
+        @foreach (var users in Model.Users)
+        {
+            <th colspan="2" class="center">
+                @Html.DisplayFor(u => users.UserName)
+            </th>
+        }
+    </tr>
+    <tr>
+        <th>
+            Favorite
+        </th>
+        <th>
+            Underdog
+        </th>
+        <th>
+            Spread
+        </th>
+        <th>
+            Winner
+        </th>
+        @foreach (var users in Model.Users)
+        {
+            <th>
+                Pick
+            </th>
+            <th>
+                Bet
+            </th>
+        }
+    </tr>
+
+@foreach (var results in Model.Results)
+{
+    <tr>
+        <td>
+            @Html.DisplayFor(gr => results.GameResult.GameSpread.FavoriteTeam.TeamLongName)
+        </td>
+        <td>
+            @Html.DisplayFor(gr => results.GameResult.GameSpread.UnderdogTeam.TeamLongName)
+        </td>
+        <td>
+            @Html.DisplayFor(gr => results.GameResult.GameSpread.Spread)
+        </td>
+        <td>
+            @Html.DisplayFor(gr => results.GameResult.WinnerTeam.TeamLongName)
+        </td>
+        @foreach (var userGameResults in results.UserGameResults)
+        {
+        <td>
+            @Html.DisplayFor(ugr => userGameResults.UserGameSelection.PickTeam.TeamShortName)
+        </td>
+        <td>
+            @Html.DisplayFor(ugr => userGameResults.BetPoints)
+        </td>
+        }
+    </tr>
+}
+
+</table>

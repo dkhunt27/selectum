@@ -1,9 +1,36 @@
-﻿@{
-    ViewBag.Title = "Add Candidate"; 
+﻿@using Selectum
+@model Selectum.ViewModels.Selection
+@{
+    ViewBag.Title = "Make Your Selection"; 
 }
-<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/Scripts/knockout-2.1.0.js")" type="text/javascript"></script>
+
 <script src="@Url.Content("~/Scripts/Selection/selectionViewModel.js")" type="text/javascript"></script>
+
+
+<div class="navbar">
+  <div class="navbar-inner">
+    <a class="brand disabled">Selection</a>
+    <ul class="nav">
+        <li>
+            <a class="disabled">Week</a>
+        </li>
+        @foreach (var gameFilter in ViewBag.GameFilters)
+        {
+            var active = "";
+            if (gameFilter.Selected)
+            {
+                active = "active";
+            }
+            var href = "/Selection/GameFilter/" + @gameFilter.Value;
+        <li>
+            <a class="@active" href="@href">
+                @gameFilter.Value
+            </a>   
+        </li>
+        }
+    </ul>
+  </div>
+</div>
 
 <div class="row">
     <div class="span12">
@@ -19,22 +46,31 @@
             <tbody class="">
                 <tr class="">
                     <td class="">
-                        <span data-bind="text: possibleBets" />
+                        <span data-bind="text: possibleBets()" />
                     </td>
                     <td class=""> 
-                        <span data-bind="text: placedBets" />
+                        <span data-bind="text: placedBets()" />
                     </td>
                     <td class=""> 
-                        <span data-bind="text: bonusPoints" />
+                        <span data-bind="text: bonusPoints()" />
                     </td>
                     <td class=""> 
-                        <span data-bind="text: spentPoints" />
+                        <span data-bind="text: spentPoints()" />
                     </td>
                 </tr>
             </tbody>
         </table>
     </div>
 </div>
+
+<!--div class="row span12">
+        <td class="span5">
+            <div class="btn-group">
+                <button class="btn" type='submit' data-bind="click: function(data, event) { $root.test(1, $root, data, event) }, attr: {id: 'yourBetB1G' + 1}, css: {'active': $root.betPickersActive() === true, 'btn-info': $root.betPickersToggled() === true}, disable: $root.betPickersDisabled() === true">Bet 1</button>
+            </div>
+        </td>
+</div-->
+
 <div class="row">
     <div class="span12">
         <table class="table">
@@ -46,61 +82,114 @@
                     <th class="">
                         Spread
                     </th>
-                    @*<th class="">
-                        Your Selection
-                    </th>*@
                     <th class="">
                         <span class="label label-warning span1">No Bet</span>
                         <span class="label label-success span1">Favorite</span>
                         <span class="label label-important span1">Underdog</span>
-                        <!--div class="btn-group">
-                            <button class="btn btn-small span1" type='submit'>No Bet</button>
-                            <button class="btn btn-small span2" type='submit'>Favorite</button>
-                            <button class="btn btn-small span2" type='submit'>Underdog</button>
-                        </div-->
                     </th>
                     <th class="">
                         Bet Amount
                     </th>
-                    @*<th>Min</th>
-                    <th>Max</th>*@
                 </tr>
             </thead>
-            <tbody data-bind="foreach: userGameSelections">
-                <tr class="" data-bind="attr: {id: 'gameRow' + userGameSelectionId, class: 'warning'}">
+            <!-- TODO remove the nobet hardcoding -->
+            <tbody data-bind="foreach: gameRows.gameRows">
+                <tr class="" data-bind="attr: {id: 'gameRow' + $data.userGameSelection.userGameSelectionId}, 
+                                        css: {'warning': $data.userGameSelection.pickTeam.teamId === 1, 
+                                              'success': $data.userGameSelection.pickTeam.teamId === $data.userGameSelection.gameSpread.favoriteTeam.teamId, 
+                                              'error': $data.userGameSelection.pickTeam.teamId === $data.userGameSelection.gameSpread.underdogTeam.teamId}">
                     <td class="">
-                        <strong><span data-bind="text: gameDateTime" /></strong>
+                        <strong><span data-bind="text: $data.userGameSelection.gameSpread.game.gameDateTime" /></strong>
                     </td>                      
                     <td class="">
-                        <strong><span data-bind="text: spread" /></strong>
+                        <strong><span data-bind="text: $data.userGameSelection.gameSpread.spread" /></strong>
                     </td>
                     <td class="span5">
                         <div class="btn-group">
-                            <button class="" type='submit' data-bind="click: function(data, event) { $parent.userMadeSelection('no bet', 'label label-warning', 'warning', $root, data, event) }, attr: {id: 'btnNoBet' + userGameSelectionId, class: 'btn btn-small span1 btn-warning active'}">No Bet</button>
-                            <button class="btn btn-small span2" type='submit' data-bind="click: function(data, event) { $parent.userMadeSelection('favorite', 'label label-success', 'success', $root, data, event) }, text:favoriteTeam, attr: {id: 'btnFavorite' + userGameSelectionId}"></button>
-                            <button class="btn btn-small span2" type='submit' data-bind="click: function(data, event) { $parent.userMadeSelection('underdog', 'label label-important', 'error', $root, data, event) } , text:underdogTeam, attr: {id: 'btnUnderdog' + userGameSelectionId}"></button>
+                            <button 
+                                class="btn btn-small span1" 
+                                type='submit' 
+                                data-bind="click: function(data, event) { $parent.userMadeSelection('no bet', 'label label-warning', 'warning', $root, $data, event) }, 
+                                           attr: {id: 'btnNoBet' + $data.userGameSelection.userGameSelectionId}, 
+                                           css: {'active': $data.userGameSelection.pickTeam.teamId === 1, 
+                                                 'btn-warning': $data.userGameSelection.pickTeam.teamId === 1}, 
+                                           disable: $root.selectionDisabledForThisGameFilter || $data.saved,
+                                           text: 'No Bet'">
+                            </button>
+                            <button 
+                                class="btn btn-small span2" 
+                                type='submit' 
+                                data-bind="click: function(data, event) { $parent.userMadeSelection('favorite', 'label label-success', 'success', $root, $data, event) }, 
+                                           attr: {id: 'btnFavorite' + $data.userGameSelection.userGameSelectionId}, 
+                                           css: {'active': $data.userGameSelection.pickTeam.teamId === $data.userGameSelection.gameSpread.favoriteTeam.teamId, 
+                                                 'btn-success': $data.userGameSelection.pickTeam.teamId === $data.userGameSelection.gameSpread.favoriteTeam.teamId}, 
+                                           disable: $root.selectionDisabledForThisGameFilter || $data.userGameSelection.saved,
+                                           text: $data.userGameSelection.gameSpread.favoriteTeam.teamLongName">
+                            </button>
+                            <button 
+                                class="btn btn-small span2" 
+                                type='submit' 
+                                data-bind="click: function(data, event) { $parent.userMadeSelection('underdog', 'label label-important', 'error', $root, $data, event) } , 
+                                           text: $data.userGameSelection.gameSpread.underdogTeam.teamLongName, 
+                                           attr: {id: 'btnUnderdog' + $data.userGameSelection.userGameSelectionId}, 
+                                           css: {'active': $data.userGameSelection.pickTeam.teamId === $data.userGameSelection.gameSpread.underdogTeam.teamId, 
+                                                 'btn-danger': $data.userGameSelection.pickTeam.teamId === $data.userGameSelection.gameSpread.underdogTeam.teamId}, 
+                                           disable: $root.selectionDisabledForThisGameFilter || $data.userGameSelection.saved">
+                            </button>
                         </div>
                     </td>
-     
-                    @*<td class="">
-                        <span data-bind="text: pickTeam, attr: {id: 'yourSelection' + userGameSelectionId}" />
-                    </td>*@  
-                    @*<td>
-                        <span data-bind="text: bet, attr: {id: 'yourBet' + userGameSelectionId}" />
-                    </td>   
-                    <td>
-                        <span data-bind="text: minGameBet, attr: {id: 'yourMinGameBet' + userGameSelectionId}" />
-                    </td>   
-                    <td>
-                        <span data-bind="text: maxGameBet, attr: {id: 'yourMaxGameBet' + userGameSelectionId}" />
-                    </td> *@  
                     <td class="">
                         <div class="btn-group">
-                            <button class="btn" type='submit' disabled='disabled' data-bind="click: function(data, event) { $parent.userMadeBet(1, $root, data, event) }, attr: {id: 'yourBetB1G' + userGameSelectionId}">Bet 1</button>
-                            <button class="btn" type='submit' disabled='disabled' data-bind="click: function(data, event) { $parent.userMadeBet(2, $root, data, event) }, attr: {id: 'yourBetB2G' + userGameSelectionId}">2</button>
-                            <button class="btn" type='submit' disabled='disabled' data-bind="click: function(data, event) { $parent.userMadeBet(3, $root, data, event) }, attr: {id: 'yourBetB3G' + userGameSelectionId}">3</button>
-                            <button class="btn" type='submit' disabled='disabled' data-bind="click: function(data, event) { $parent.userMadeBet(4, $root, data, event) }, attr: {id: 'yourBetB4G' + userGameSelectionId}">4</button>
-                            <button class="btn" type='submit' disabled='disabled' data-bind="click: function(data, event) { $parent.userMadeBet(5, $root, data, event) }, attr: {id: 'yourBetB5G' + userGameSelectionId}">5</button>
+                            <button 
+                                class="btn" 
+                                type='submit' 
+                                data-bind="click: function(data, event) { $parent.userMadeBet(1, $root, $data, event) }, 
+                                           attr: {id: 'yourBetB1G' + $data.userGameSelection.userGameSelectionId}, 
+                                           css: {'active': $data.betPickers[0].toggled(), 
+                                                 'btn-info': $data.betPickers[0].toggled()}, 
+                                           disable: $data.betPickers[0].disabled() || $root.selectionDisabledForThisGameFilter || $data.userGameSelection.saved,
+                                           text: 'Bet ' + $data.betPickers[0].betValue">
+                            </button>
+                            <button 
+                                class="btn" 
+                                type='submit' 
+                                data-bind="click: function(data, event) { $parent.userMadeBet(2, $root, $data, event) }, 
+                                           attr: {id: 'yourBetB2G' + $data.userGameSelection.userGameSelectionId}, 
+                                           css: {'active': $data.betPickers[1].toggled(), 
+                                                 'btn-info': $data.betPickers[1].toggled()}, 
+                                           disable: $data.betPickers[1].disabled() || $root.selectionDisabledForThisGameFilter || $data.userGameSelection.saved,
+                                           text: $data.betPickers[1].betValue">
+                            </button>
+                            <button 
+                                class="btn" 
+                                type='submit' 
+                                data-bind="click: function(data, event) { $parent.userMadeBet(3, $root, $data, event) }, 
+                                           attr: {id: 'yourBetB3G' + $data.userGameSelection.userGameSelectionId}, 
+                                           css: {'active': $data.betPickers[2].toggled(), 
+                                                 'btn-info': $data.betPickers[2].toggled()}, 
+                                           disable: $data.betPickers[2].disabled() || $root.selectionDisabledForThisGameFilter || $data.userGameSelection.saved,
+                                           text: $data.betPickers[2].betValue">
+                            </button>
+                            <button 
+                                class="btn" 
+                                type='submit' 
+                                data-bind="click: function(data, event) { $parent.userMadeBet(4, $root, $data, event) }, 
+                                           attr: {id: 'yourBetB4G' + $data.userGameSelection.userGameSelectionId}, 
+                                           css: {'active': $data.betPickers[3].toggled(), 
+                                                 'btn-info': $data.betPickers[3].toggled()}, 
+                                           disable: $data.betPickers[3].disabled() || $root.selectionDisabledForThisGameFilter || $data.userGameSelection.saved,
+                                           text: $data.betPickers[3].betValue">
+                            </button>
+                            <button 
+                                class="btn" 
+                                type='submit' 
+                                data-bind="click: function(data, event) { $parent.userMadeBet(5, $root, $data, event) }, 
+                                           attr: {id: 'yourBetB5G' + $data.userGameSelection.userGameSelectionId}, 
+                                           css: {'active': $data.betPickers[4].toggled(), 
+                                                 'btn-info': $data.betPickers[4].toggled()}, 
+                                           disable: $data.betPickers[4].disabled() || $root.selectionDisabledForThisGameFilter || $data.userGameSelection.saved,
+                                           text: $data.betPickers[4].betValue">
+                            </button>
                         </div>
 
                     </td>
@@ -111,12 +200,13 @@
 </div>
 <div class="row">
     <div class="span12">
-        <button class="btn btn-inverse" type="submit" data-bind="click: $root.userSelectedSave">Save</button>
+        <button class="btn btn-inverse" type="submit" data-bind="click: $root.userSelectedSave, disable: $root.selectionDisabledForThisGameFilter || $data.gameRowsHaveBeenSaved">Save</button>
     </div>
 </div>
 <script type="text/javascript">
     $(function () {
+        var initialData = @Html.Raw(Model.ToJson());
         //activates KO
-        ko.applyBindings(selectionViewModel);
+        ko.applyBindings(new selectionViewModel(initialData));
     });
 </script>

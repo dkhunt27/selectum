@@ -1,0 +1,40 @@
+﻿json
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+[
+new Team {'TeamId':'1','TeamLongName':'No Bet','TeamShortName':'X  ','TeamOtherName':'No Bet'},
+new Team {'TeamId':'2','TeamLongName':'NY Giants','TeamShortName':'NYG','TeamOtherName':'Giants'},
+new Team {'TeamId':'3','TeamLongName':'New England','TeamShortName':'NE ','TeamOtherName':'Patriots'},
+new Team {'TeamId':'4','TeamLongName':'Minnesota','TeamShortName':'MIN','TeamOtherName':'Vikings'},
+new Team {'TeamId':'5','TeamLongName':'New Orleans','TeamShortName':'NO ','TeamOtherName':'Saints'},
+new Team {'TeamId':'6','TeamLongName':'Buffalo','TeamShortName':'BUF','TeamOtherName':'Bills'},
+new Team {'TeamId':'7','TeamLongName':'Philadelphia','TeamShortName':'PHI','TeamOtherName':'Eagles'},
+new Team {'TeamId':'8','TeamLongName':'Oakland','TeamShortName':'OAK','TeamOtherName':'Raiders'},
+new Team {'TeamId':'9','TeamLongName':'Cincinnati','TeamShortName':'CIN','TeamOtherName':'Bengals'},
+new Team {'TeamId':'10','TeamLongName':'Houston','TeamShortName':'HOU','TeamOtherName':'Texans'},
+new Team {'TeamId':'11','TeamLongName':'Dallas','TeamShortName':'DAL','TeamOtherName':'Cowboys'},
+new Team {'TeamId':'12','TeamLongName':'Washington','TeamShortName':'WAS','TeamOtherName':'Redskins'},
+new Team {'TeamId':'13','TeamLongName':'Pittsburgh','TeamShortName':'PIT','TeamOtherName':'Steelers'},
+new Team {'TeamId':'14','TeamLongName':'San Diego','TeamShortName':'SD ','TeamOtherName':'Chargers'},
+new Team {'TeamId':'15','TeamLongName':'San Francisco','TeamShortName':'SF ','TeamOtherName':'49ers'},
+new Team {'TeamId':'16','TeamLongName':'Atlanta','TeamShortName':'ATL','TeamOtherName':'Falcons'},
+new Team {'TeamId':'17','TeamLongName':'Carolina','TeamShortName':'CAR','TeamOtherName':'Panthers'},
+new Team {'TeamId':'18','TeamLongName':'Chicago','TeamShortName':'CHI','TeamOtherName':'Bears'},
+new Team {'TeamId':'19','TeamLongName':'Detroit','TeamShortName':'DET','TeamOtherName':'Lions'},
+new Team {'TeamId':'20','TeamLongName':'NY Jets','TeamShortName':'NYJ','TeamOtherName':'Jets'},
+new Team {'TeamId':'21','TeamLongName':'Indianapolis','TeamShortName':'IND','TeamOtherName':'Colts'},
+new Team {'TeamId':'22','TeamLongName':'Baltimore','TeamShortName':'BAL','TeamOtherName':'Ravens'},
+new Team {'TeamId':'23','TeamLongName':'Kansas City','TeamShortName':'KC ','TeamOtherName':'Chiefs'},
+new Team {'TeamId':'24','TeamLongName':'Seattle','TeamShortName':'SEA','TeamOtherName':'Seahawks'},
+new Team {'TeamId':'25','TeamLongName':'Arizona','TeamShortName':'ARI','TeamOtherName':'Cardinals'},
+new Team {'TeamId':'26','TeamLongName':'Denver','TeamShortName':'DEN','TeamOtherName':'Broncos'},
+new Team {'TeamId':'27','TeamLongName':'Tampa Bay','TeamShortName':'TB ','TeamOtherName':'Buccaneers'},
+new Team {'TeamId':'28','TeamLongName':'Miami','TeamShortName':'MIA','TeamOtherName':'Dolphins'},
+new Team {'TeamId':'29','TeamLongName':'Cleveland','TeamShortName':'CLE','TeamOtherName':'Browns'},
+new Team {'TeamId':'30','TeamLongName':'Jacksonville','TeamShortName':'JAC','TeamOtherName':'Jaguars'},
+new Team {'TeamId':'31','TeamLongName':'St. Louis','TeamShortName':'STL','TeamOtherName':'Rams'},
+new Team {'TeamId':'32','TeamLongName':'Tennessee','TeamShortName':'TEN','TeamOtherName':'Titans'},
+new Team {'TeamId':'33','TeamLongName':'Green Bay','TeamShortName':'GB ','TeamOtherName':'Packers'},
+]
+
+(35 row(s) affected)
+

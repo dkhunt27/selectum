@@ -10,18 +10,17 @@ namespace Selectum.Models
     {
         public UserGameSelection()
         {
-            //this.UserGameResults = new HashSet<UserGameResult>();
         }
 
         public int UserGameSelectionId { get; set; }
         public int UserId { get; set; }
-        public int GameId { get; set; }
-        public int Bet { get; set; }
+        public int GameSpreadId { get; set; }
         public int PickTeamId { get; set; }
+        public int Bet { get; set; }
+        public bool Saved { get; set; }
 
-        public virtual Game Game { get; set; }
+        public virtual GameSpread GameSpread { get; set; }
         public virtual Team PickTeam { get; set; }
         public virtual User User { get; set; }
-        //public virtual ICollection<UserGameResult> UserGameResults { get; set; }
     }
 }

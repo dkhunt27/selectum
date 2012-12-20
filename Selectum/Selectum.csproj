@@ -277,6 +277,10 @@
     <Content Include="Images\glyphicons-halflings.png" />
     <Content Include="Scripts\Libs\bootstrap.js" />
     <Content Include="Scripts\Libs\bootstrap.min.js" />
+    <None Include="Properties\PublishProfiles\selectum - FTP %282%29.pubxml" />
+    <None Include="Properties\PublishProfiles\selectum - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\selectum - Web Deploy %282%29.pubxml" />
+    <None Include="Properties\PublishProfiles\selectum - Web Deploy.pubxml" />
     <None Include="Scripts\Libs\jquery-1.8.3.intellisense.js" />
     <Content Include="Scripts\Libs\jquery-1.8.3.js" />
     <Content Include="Scripts\Libs\jquery-1.8.3.min.js" />
@@ -304,7 +308,9 @@
     <Content Include="Scripts\Tests\qunit-1.10.0.js" />
     <Content Include="Scripts\Tests\selectionTests.js" />
     <Content Include="Scripts\Tests\Tests.html" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -364,6 +370,9 @@
     <Content Include="Views\ResultsByGame\GameFilter.cshtml" />
     <Content Include="Views\Admin\GameFilter.cshtml" />
     <Content Include="Views\OverallResultsByGameFilter\Index.cshtml" />
+    <Content Include="_AppStart.cshtml" />
+    <Content Include="Views\Admin\GameResultProcessingForSpecifiedGameFilterId.cshtml" />
+    <Content Include="Views\Admin\GameResultProcessingUpToGameFilterId.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

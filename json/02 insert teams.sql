@@ -1,4 +1,5 @@
 INSERT Team(TeamLongName,TeamShortName,TeamOtherName) VALUES('No Bet','X  ','No Bet')
+INSERT Team(TeamLongName,TeamShortName,TeamOtherName) VALUES('No Picks','Z  ','No Picks')
 INSERT Team(TeamLongName,TeamShortName,TeamOtherName) VALUES('NY Giants','NYG','Giants')
 INSERT Team(TeamLongName,TeamShortName,TeamOtherName) VALUES('New England','NE ','Patriots')
 INSERT Team(TeamLongName,TeamShortName,TeamOtherName) VALUES('Minnesota','MIN','Vikings')

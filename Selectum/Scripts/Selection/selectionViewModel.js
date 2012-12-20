@@ -4,7 +4,7 @@ var selectionViewModel = function (data) {
     if (typeof data === "undefined") throw new Error("data passed to selectionViewModel is undefined");
     if (data === null) throw new Error("data passed to selectionViewModel is null");
 
-    self.debugLevel = 1;    
+    self.debugLevel = 0;    
 
     if (self.debugLevel > 0) console.log(data);
 
@@ -557,10 +557,27 @@ var selectionViewModel = function (data) {
     self.userSelectedSave = function (data, event) {
         if (self.debugLevel > 0) console.log("userSelectedSave");
 
+        var realGameRows = data.gameRows.gameRows;
+        console.log(realGameRows);
+
+        delete data.gameRows.gameRows;
+        delete data.gameRows;
+        console.log(realGameRows);
+        data.gameRows = realGameRows;
+
+        console.log(data);
+
         $.ajax("/Selection/Save", {
             data: ko.toJSON({ selection: self }),
             type: "post", contentType: "application/json",
-            success: function (result) { alert(result) }
+            success: function (result) {
+                alert("Saved the results to the database (" + result + " records).  Make sure to check the 'Weekly Results' Tab to ensure they saved correctly.");
+
+                window.location = "/Selection";
+            },
+            fail: function (err) {
+                alert("Error occurred trying to save to the database.  Error:" + err);
+            }
         });
     };
 

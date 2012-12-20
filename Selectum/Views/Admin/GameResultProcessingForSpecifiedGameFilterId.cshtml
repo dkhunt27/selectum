@@ -1,0 +1,45 @@
+﻿@{
+    ViewBag.Title = "Admin Page";
+}
+
+<div class="navbar">
+  <div class="navbar-inner">
+    <a class="brand disabled">Admin Functions</a>
+    <ul class="nav">
+        <li>
+            <a class="disabled">Week</a>
+        </li>
+        @foreach (var gameFilter in ViewBag.GameFilters)
+        {
+            var active = "";
+            if (gameFilter.Selected)
+            {
+                active = "active";
+            }
+            var href = "/Admin/GameFilter/" + @gameFilter.Value;
+        <li>
+            <a class="@active" href="@href">
+                @gameFilter.Value
+            </a>   
+        </li>
+        }
+    </ul>
+  </div>
+</div>
+@if (!string.IsNullOrWhiteSpace(ViewBag.MessageToUser))
+{
+    <div class="alert alert-error">
+        @Html.Raw(ViewBag.MessageToUser)
+    </div>
+}
+@if (!string.IsNullOrWhiteSpace(ViewBag.MessageToUserSelectedGameFilterId))
+{
+    <div class="alert alert-info">
+        @Html.Raw(ViewBag.MessageToUserSelectedGameFilterId)
+    </div>
+}
+<div>
+     @Html.ActionLink("Perform Game Result Calcs for GameFilterId:" + ((List<SelectListItem>)ViewBag.GameFilters).FirstOrDefault(gf => gf.Selected).Value, "GameResultProcessingForSpecifiedGameFilterId", new { id=((List<SelectListItem>)ViewBag.GameFilters).FirstOrDefault(gf => gf.Selected).Value })
+    <br />
+     @Html.ActionLink("Perform Game Result Calcs upto GameFilterId:" + ((List<SelectListItem>)ViewBag.GameFilters).FirstOrDefault(gf => gf.Selected).Value, "GameResultProcessingUpToGameFilterId", new { id=((List<SelectListItem>)ViewBag.GameFilters).FirstOrDefault(gf => gf.Selected).Value })
+</div>

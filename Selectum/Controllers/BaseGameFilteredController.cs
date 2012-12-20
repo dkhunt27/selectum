@@ -28,6 +28,8 @@ namespace Selectum.Controllers
             }
 
             ViewBag.GameFilters = gameFilters;
+
+            ViewBag.MessageToUserSelectedGameFilterId = "Selected " + gameFilters.First(gf => gf.Selected).Text;
         }
 
         protected int validateGameFilterId(int id)
@@ -37,7 +39,7 @@ namespace Selectum.Controllers
 
             if (currentGameFilter == null)
             {
-                throw new ArgumentException(string.Format("Unknown GameFilterId:{0}",id));
+                throw new ArgumentException(string.Format("Unknown GameFilterId:{0}", id));
             }
             else
             {
@@ -45,12 +47,32 @@ namespace Selectum.Controllers
             }
         }
 
+        protected int getSelectedGameFilterId()
+        {
+            // make sure it is a valid gameFilterId
+
+            foreach (var gameFilter2 in ViewBag.GameFilters)
+            {
+            }
+
+            var gameFilter = ((List<SelectListItem>)ViewBag.GameFilters).FirstOrDefault(gf => gf.Selected);
+
+            if (gameFilter == null)
+            {
+                throw new ArgumentException("A selected gameFilter in teh ViewBag was not found");
+            }
+            else
+            {
+                return Convert.ToInt32(gameFilter.Value);
+            }
+        }
+
         public ActionResult Index()
         {
             var utilities = new ModelUtilities();
 
-            //var now = DateTime.Now;
-            var now = new DateTime(2012, 12, 16);
+            var now = DateTime.Now;
+            //var now = new DateTime(2012, 12, 16);
             var currentGameFilterId = utilities.GetGameFilterByDate(db.GameFilters.ToList(), now).GameFilterId;
 
             return RedirectToAction(string.Concat("GameFilter/", currentGameFilterId));

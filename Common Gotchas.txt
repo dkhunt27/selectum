@@ -1,0 +1,6 @@
+The parameters dictionary contains a null entry for parameter 'id' of non-nullable type 'System.Int32' for method 'System.Web.Mvc.ActionResult GameFilter(Int32)' in 'Selectum.Controllers.AdminController'. An optional parameter must be a reference type, a nullable type, or be declared as an optional parameter.
+Parameter name: parameters
+
+Also the URL was missing the gameFilterId
+
+The ActionResult name in my action link did not match an ActionResult method in the controller...I had accidently misspelled it

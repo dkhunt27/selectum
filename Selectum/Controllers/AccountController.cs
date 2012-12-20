@@ -47,9 +47,18 @@ namespace Selectum.Controllers
 
         //
         // POST: /Account/LogOff
-
+        /*
         [HttpPost]
         [ValidateAntiForgeryToken]
+        public ActionResult LogOff()
+        {
+            WebSecurity.Logout();
+
+            return RedirectToAction("Index", "Home");
+        }*/
+
+        //
+        // GET: /Account/LogOff
         public ActionResult LogOff()
         {
             WebSecurity.Logout();

@@ -10,10 +10,11 @@ using Selectum.DAL;
 using System.Web.Security;
 using System.Data.Entity.Infrastructure;
 using Selectum.ViewModels;
+using WebMatrix.WebData;
 
 namespace Selectum.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class SelectionController : BaseGameFilteredController
     {
         public ActionResult GameFilter(int id = 0)
@@ -26,9 +27,20 @@ namespace Selectum.Controllers
                 bool selectionDisabledForThisGameFilter = !db.GameFilters.FirstOrDefault(gf => gf.GameFilterId == currentGameFilterId).GameFilterEnabled;
 
                 var utilities = new ModelUtilities();
-                var userProfileId = 2;
-                //var userProfileId = (int)Membership.GetUser().ProviderUserKey;
-                var userId = db.UserToUserProfiles.First(utup => utup.UserProfileId == userProfileId).UserId;
+
+                // convert the security user to its user profile id
+                //var userProfileId = 2;
+                var userProfileId = WebSecurity.GetUserId(User.Identity.Name);
+
+                var userToUserProfile = db.UserToUserProfiles.FirstOrDefault(utup => utup.UserProfileId == userProfileId);
+                if (userToUserProfile == null)
+                {
+                    throw new ArgumentException(string.Format("Your user profile is not associated with a selectum user yet. Please contact the admin and ask for the association to be set up for userName:{0}", User.Identity.Name));
+                }
+
+                // convert the user profile userid to the data userid
+                var userId = userToUserProfile.UserId;
+
 
                 var userGameSelections = db.UserGameSelections
                                                 .Include(ugs => ugs.GameSpread)
@@ -102,6 +114,29 @@ namespace Selectum.Controllers
                     gameRow.User = ugs.User;
                     gameRow.UserGameSelectionId = ugs.UserGameSelectionId;
                     gameRow.UserId = ugs.UserId;*/
+
+                    if (ugs.GameSpread.Game.HomeTeam == 1)
+                    {
+                        if (ugs.GameSpread.UnderdogTeam.TeamId == ugs.GameSpread.Game.Team1.TeamId)
+                        {
+                            ugs.GameSpread.UnderdogTeam.TeamLongName = string.Concat("@" + ugs.GameSpread.UnderdogTeam.TeamLongName);
+                        }
+                        else
+                        {
+                            ugs.GameSpread.FavoriteTeam.TeamLongName = string.Concat("@" + ugs.GameSpread.FavoriteTeam.TeamLongName);
+                        }
+                    }
+                    else
+                    {
+                        if (ugs.GameSpread.UnderdogTeam.TeamId == ugs.GameSpread.Game.Team2.TeamId)
+                        {
+                            ugs.GameSpread.UnderdogTeam.TeamLongName = string.Concat("@" + ugs.GameSpread.UnderdogTeam.TeamLongName);
+                        }
+                        else
+                        {
+                            ugs.GameSpread.FavoriteTeam.TeamLongName = string.Concat("@" + ugs.GameSpread.FavoriteTeam.TeamLongName);
+                        }
+                    }
                     gameRow.UserGameSelection = ugs;
 
                     var betPickers = new List<BetPicker>();
@@ -109,10 +144,17 @@ namespace Selectum.Controllers
                     for (int i = 0; i < selection.MaxBetForAnyOneGame; i++)
                     {
                         var betPicker = new BetPicker();
-                        betPicker.Activated = false;
-                        betPicker.Disabled = true;
-                        betPicker.Toggled = false;
-                        betPicker.BetValue = i + 1;
+                        var berPickerValue = i + 1;
+                        if (ugs.Bet == 0)
+                        {
+                            betPicker.Disabled = true;
+                        }
+                        else
+                        {
+                            betPicker.Disabled = selection.SelectionDisabledForThisGameFilter || ugs.Saved;
+                        }
+                        betPicker.Toggled = berPickerValue == ugs.Bet;
+                        betPicker.BetValue = berPickerValue;
 
                         betPickers.Add(betPicker);
                     }
@@ -126,9 +168,10 @@ namespace Selectum.Controllers
 
                 // validation rules
 
-                if (userGameSelections == null)
+                if (userGameSelections == null || userGameSelections.Count == 0)
                 {
-                    throw new ArgumentException(string.Format("Missing user game selections for given GameFilterId:{0}", currentGameFilterId));
+                    //throw new ArgumentException(string.Format("Missing user game selections for given GameFilterId:{0}", currentGameFilterId));
+                    ViewBag.MessageToUser = string.Format("Missing user game selections for given GameFilterId:{0}", currentGameFilterId);
                 }
 
                 return View(selection);

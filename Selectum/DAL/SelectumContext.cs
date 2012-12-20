@@ -31,6 +31,7 @@ namespace Selectum.DAL
             #region Team
             modelBuilder.Entity<Team>().Property(x => x.TeamShortName).HasMaxLength(5).IsRequired();
             modelBuilder.Entity<Team>().Property(x => x.TeamLongName).HasMaxLength(25).IsRequired();
+            modelBuilder.Entity<Team>().Property(x => x.TeamOtherName).HasMaxLength(25).IsRequired();
             #endregion
 
             #region GameFilter

@@ -31,7 +31,18 @@
     </ul>
   </div>
 </div>
-
+@if (!string.IsNullOrWhiteSpace(ViewBag.MessageToUser))
+{
+    <div class="alert alert-error">
+        @Html.Raw(ViewBag.MessageToUser)
+    </div>
+}
+@if (!string.IsNullOrWhiteSpace(ViewBag.MessageToUserSelectedGameFilterId))
+{
+    <div class="alert alert-info">
+        @Html.Raw(ViewBag.MessageToUserSelectedGameFilterId)
+    </div>
+}
 <div class="row">
     <div class="span12">
         <table class="table">
@@ -113,7 +124,7 @@
                                            attr: {id: 'btnNoBet' + $data.userGameSelection.userGameSelectionId}, 
                                            css: {'active': $data.userGameSelection.pickTeam.teamId === 1, 
                                                  'btn-warning': $data.userGameSelection.pickTeam.teamId === 1}, 
-                                           disable: $root.selectionDisabledForThisGameFilter || $data.saved,
+                                           disable: $root.selectionDisabledForThisGameFilter || $data.userGameSelection.saved,
                                            text: 'No Bet'">
                             </button>
                             <button 

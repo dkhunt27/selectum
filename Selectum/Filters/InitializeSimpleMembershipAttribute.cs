@@ -17,8 +17,11 @@ namespace Selectum.Filters
 
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
+            // it is always initialized in _AppStart.cshtml
+
             // Ensure ASP.NET Simple Membership is initialized only once per app start
-            LazyInitializer.EnsureInitialized(ref _initializer, ref _isInitialized, ref _initializerLock);
+            //_isInitialized = WebSecurity.Initialized;
+            //LazyInitializer.EnsureInitialized(ref _initializer, ref _isInitialized, ref _initializerLock);
         }
 
         private class SimpleMembershipInitializer

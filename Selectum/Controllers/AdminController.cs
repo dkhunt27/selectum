@@ -11,6 +11,7 @@ using System.Web.Security;
 using System.Data.Entity.Infrastructure;
 using Selectum.ViewModels;
 using System.Configuration;
+using System.Text;
 
 namespace Selectum.Controllers
 {
@@ -28,55 +29,28 @@ namespace Selectum.Controllers
             return View();
         }
 
-        public ActionResult GameResultProcessing(int id)
+
+        public ActionResult GameResultProcessingUpToGameFilterId(int id)
         {
-            string logProcess = "AdminController.GameResultProcessing";
+            string logProcess = "AdminController.GameResultProcessingUpToGameFilterId";
+
             try
             {
                 int currentGameFilterId = validateGameFilterId(id);
                 SetViewBagGameFilter(currentGameFilterId);
 
-                var users = db.Users.ToList();
+                StringBuilder results = new StringBuilder();
+                results.Length = 0;
 
-                var thisGameFiltersGameResults = db.GameResults
-                                                    .Include(gr => gr.GameSpread)
-                                                    .Include(gr => gr.GameSpread.FavoriteTeam)
-                                                    .Include(gr => gr.GameSpread.UnderdogTeam)
-                                                    .Include(gr => gr.GameSpread.Game)
-                                                    .Include(gr => gr.WinnerTeam)
-                                                    .Where(gr => gr.GameSpread.Game.GameFilterId == currentGameFilterId)
-                                                    .ToList();
+                for (int i = 1; i <= currentGameFilterId; i++)
+                {
+                    results.AppendLine(GameResultProcessing(i));
+                }
 
-                var thisGameFiltersUsersGameSelections = db.UserGameSelections
-                                                            .Include(ugs => ugs.GameSpread)
-                                                            .Include(ugs => ugs.GameSpread.Game)
-                                                            .Include(ugs => ugs.User)
-                                                            .Include(ugs => ugs.PickTeam)
-                                                            .Where(ugs => ugs.GameSpread.Game.GameFilterId == currentGameFilterId)
-                                                            .ToList();
+                ViewBag.MessageToUser = results.ToString();
 
-                var noBetPickTeam = db.Teams.First(t => t.TeamLongName == "No Bet");
-
-                var userGameResults = BuildUserGameResults(currentGameFilterId, thisGameFiltersGameResults, thisGameFiltersUsersGameSelections, users, noBetPickTeam, extraPointFactorPerBetOverMin);
-
-                //TODO send back a message of how many records processed correctly/incorrectly
-                //TODO do not save ones that were not modified
-                userGameResults.ForEach(ugr => db.UserGameResults.Add(ugr));
-                db.SaveChanges();
-
-                // fetch the latest users game results from the DB
-                //var userGameResultsInDB = db.UserGameResults
-                //                                .Where(ugr => ugr.UserGameSelection.GameSpread.Game.GameFilterId == currentGameFilterId)
-                //                                .ToList();
-
-                var userResults = BuildUserResults(currentGameFilterId, userGameResults, users);
-
-                //TODO send back a message of how many records processed correctly/incorrectly
-                //TODO do not save ones that were not modified
-                userResults.ForEach(ur => db.UserResults.Add(ur));
-                db.SaveChanges();
-
-                return RedirectToAction("Index");
+                return View();
+                //return RedirectToAction("GameFilter/" + currentGameFilterId.ToString());
             }
             catch (Exception ex)
             {
@@ -93,6 +67,100 @@ namespace Selectum.Controllers
                 }
                 //db.SaveChanges();
             }
+        }
+
+        public ActionResult GameResultProcessingForSpecifiedGameFilterId(int id)
+        {
+            string logProcess = "AdminController.GameResultProcessingForSpecifiedGameFilterId";
+
+            try
+            {
+                int currentGameFilterId = validateGameFilterId(id);
+                SetViewBagGameFilter(currentGameFilterId);
+
+                string results = GameResultProcessing(currentGameFilterId);
+
+                ViewBag.MessageToUser = results;
+
+                return View();
+                //return RedirectToAction("GameFilter/" + currentGameFilterId.ToString());
+            }
+            catch (Exception ex)
+            {
+                logMessages.Add(new Log() { GameDateTime = DateTime.Now, Type = "Error", Process = logProcess, Message = ex.Message });
+                return HttpNotFound(ex.Message);
+            }
+            finally
+            {
+                logMessages.Add(new Log() { GameDateTime = DateTime.Now, Type = "Info", Process = logProcess, Message = "Ending" });
+
+                foreach (var logMessage in logMessages)
+                {
+                    db.Logs.Add(logMessage);
+                }
+                //db.SaveChanges();
+            }
+        }
+
+        public string GameResultProcessing(int gameFilterId)
+        {
+            string logProcess = "AdminController.GameResultProcessing";
+
+            var users = db.Users.ToList();
+
+            var thisGameFiltersGameResults = db.GameResults
+                                                .Include(gr => gr.GameSpread)
+                                                .Include(gr => gr.GameSpread.FavoriteTeam)
+                                                .Include(gr => gr.GameSpread.UnderdogTeam)
+                                                .Include(gr => gr.GameSpread.Game)
+                                                .Include(gr => gr.WinnerTeam)
+                                                .Where(gr => gr.GameSpread.Game.GameFilterId == gameFilterId)
+                                                .ToList();
+
+            var thisGameFiltersUsersGameSelections = db.UserGameSelections
+                                                        .Include(ugs => ugs.GameSpread)
+                                                        .Include(ugs => ugs.GameSpread.Game)
+                                                        .Include(ugs => ugs.User)
+                                                        .Include(ugs => ugs.PickTeam)
+                                                        .Where(ugs => ugs.GameSpread.Game.GameFilterId == gameFilterId)
+                                                        .ToList();
+
+            var noBetPickTeam = db.Teams.First(t => t.TeamLongName == "No Bet");
+
+            var thisGameFiltersUserGameResultsCount = db.UserGameResults
+                                                        .Where(ugr => ugr.UserGameSelection.GameSpread.Game.GameFilterId == gameFilterId)
+                                                        .Count();
+
+            if (thisGameFiltersUserGameResultsCount > 0)
+            {
+                // TODO, add logic if records already processed
+            }
+
+            var userGameResults = BuildUserGameResults(gameFilterId, thisGameFiltersGameResults, thisGameFiltersUsersGameSelections, users, noBetPickTeam, extraPointFactorPerBetOverMin);
+
+            //TODO send back a message of how many records processed correctly/incorrectly
+            //TODO do not save ones that were not modified
+            int savedUserGameResults = userGameResults.Count;
+
+            userGameResults.ForEach(ugr => db.UserGameResults.Add(ugr));
+            db.SaveChanges();
+
+            // fetch the latest users game results from the DB
+            //var userGameResultsInDB = db.UserGameResults
+            //                                .Where(ugr => ugr.UserGameSelection.GameSpread.Game.GameFilterId == currentGameFilterId)
+            //                                .ToList();
+
+            var userResults = BuildUserResults(gameFilterId, userGameResults, users);
+
+            //TODO send back a message of how many records processed correctly/incorrectly
+            //TODO do not save ones that were not modified
+            int savedUserResults = userResults.Count;
+
+            userResults.ForEach(ur => db.UserResults.Add(ur));
+            db.SaveChanges();
+
+            return string.Format("<p> gameFilterId: {0}, savedUserGameResults: {1}, savedUserResults:{2}</p>", gameFilterId, savedUserGameResults, savedUserResults);
+
         }
 
         public List<UserGameResult> BuildUserGameResults(int gameFilterId, List<GameResult> thisGameFiltersGameResults, List<UserGameSelection> thisGameFiltersUsersGameSelections, List<User> users, Team noBetPickTeam, int extraPointFactorPerBetOverMin)
@@ -198,7 +266,7 @@ namespace Selectum.Controllers
 
                             if (underdog && result)
                             {   // only if picked the underdog and won, do you get the extra points
-                                betPoints = userGameSelection.Bet * extraPointFactorPerBetOverMin;
+                                betPoints = userGameSelection.Bet + (userGameSelection.Bet * extraPointFactorPerBetOverMin);
                             }
                             else
                             {

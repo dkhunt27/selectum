@@ -1,0 +1,11 @@
+select count(*) userprofile from userprofile
+select count(*) [user] from [user]
+select count(*) usertouserprofile from usertouserprofile
+select count(*) team from team
+select count(*) gamefilter from gamefilter
+select count(*) game from game
+select count(*) gamespread from gamespread
+select count(*) gameresult from gameresult
+select count(*) usergameselection from usergameselection
+select count(*) usergameresult from usergameresult
+select count(*) userresult from userresult

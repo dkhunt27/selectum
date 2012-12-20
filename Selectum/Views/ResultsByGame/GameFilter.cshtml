@@ -28,14 +28,25 @@
     </ul>
   </div>
 </div>
-
+@if (!string.IsNullOrWhiteSpace(ViewBag.MessageToUser))
+{
+    <div class="alert alert-error">
+        @Html.Raw(ViewBag.MessageToUser)
+    </div>
+}
+@if (!string.IsNullOrWhiteSpace(ViewBag.MessageToUserSelectedGameFilterId))
+{
+    <div class="alert alert-info">
+        @Html.Raw(ViewBag.MessageToUserSelectedGameFilterId)
+    </div>
+}
 <table class="table table-bordered">
     <tr>
         <th colspan="4">
         </th>
         @foreach (var users in Model.Users)
         {
-            <th colspan="2" class="center">
+            <th colspan="3" class="center">
                 @Html.DisplayFor(u => users.UserName)
             </th>
         }
@@ -61,6 +72,9 @@
             <th>
                 Bet
             </th>
+            <th>
+                Result
+            </th>
         }
     </tr>
 
@@ -79,16 +93,37 @@
         <td>
             @Html.DisplayFor(gr => results.GameResult.WinnerTeam.TeamLongName)
         </td>
-        @foreach (var userGameResults in results.UserGameResults)
+        @for (var i=0; i<results.UserGameSelections.Count; i++)
         {
+            var userGameSelection = results.UserGameSelections[i];
         <td>
-            @Html.DisplayFor(ugr => userGameResults.UserGameSelection.PickTeam.TeamShortName)
+            @Html.DisplayFor(ugs => userGameSelection.PickTeam.TeamShortName)
         </td>
         <td>
-            @Html.DisplayFor(ugr => userGameResults.BetPoints)
+            @Html.DisplayFor(ugs => userGameSelection.Bet)
+        </td>
+        <td>
+            @if (results.UserGameResults.Count == 0)
+            {
+                @Html.Raw(0)
+            }
+            else
+            {
+                @Html.DisplayFor(ugr => results.UserGameResults[i].BetPoints)
+            }
         </td>
         }
     </tr>
 }
-
+    <tr>
+        <td colspan="4">
+            Total
+        </td>
+        @foreach(var total in Model.Totals)
+        {
+            <td colspan="3">
+                @total
+            </td>
+        }
+    </tr>
 </table>

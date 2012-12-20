@@ -26,7 +26,7 @@ namespace Selectum.Controllers
                 var resultsViewModel = new ResultsByGame();
                 var resultsByGame = new List<ResultByGame>();
 
-                var users = db.Users.ToList();
+                var users = db.Users.OrderBy(u => u.UserId).ToList();
 
                 // add the users to the view model (this will be column headers on page)
                 resultsViewModel.Users = users;
@@ -39,6 +39,15 @@ namespace Selectum.Controllers
                                         .Where(ugr => ugr.UserGameSelection.GameSpread.Game.GameFilterId == currentGameFilterId)
                                         .OrderBy(ugr => ugr.UserGameSelection.GameSpread.GameId)
                                         .ThenBy(ugr => ugr.UserGameSelection.UserId)
+                                        .ToList();
+
+                // order game results by game then user
+                var userGameSelections = db.UserGameSelections
+                                        .Include(ugr => ugr.GameSpread)
+                                        .Include(ugr => ugr.GameSpread.Game)
+                                        .Where(ugr => ugr.GameSpread.Game.GameFilterId == currentGameFilterId)
+                                        .OrderBy(ugr => ugr.GameSpread.GameId)
+                                        .ThenBy(ugr => ugr.UserId)
                                         .ToList();
 
                 var gameResults = db.GameResults
@@ -59,7 +68,24 @@ namespace Selectum.Controllers
                                                 .OrderBy(ugr => ugr.UserGameSelection.UserId)
                                                 .ToList();
 
-                    resultsByGame.Add(new ResultByGame(gameResult, userGameResultsTemp));
+                    /*  TODO insert missing users data
+                    for (int i = 0; i <users.Count; i++)
+                    {
+                        // if the user game results do not exist, insert dummy one
+                        if (userGameResultsTemp[i] == null)
+                        {
+                            //doesn't exist, so insert one
+                            userGameResultsTemp.Insert(i, new UserGameResult(){ 
+                        }
+                    }
+                    */
+
+                    var userGameSelectionsTemp = userGameSelections
+                                                    .Where(ugr => ugr.GameSpread.GameId == gameResult.GameSpread.GameId)
+                                                    .OrderBy(ugr => ugr.UserId)
+                                                    .ToList();
+
+                    resultsByGame.Add(new ResultByGame(gameResult, userGameResultsTemp, userGameSelectionsTemp));
                 }
 
                 if (resultsByGame.Count > 0)
@@ -67,17 +93,28 @@ namespace Selectum.Controllers
                     // make sure each game has each user in the same order
                     // get the user/game order from the first item
                     var userGameResultsFromFirst = resultsByGame[0].UserGameResults;
+                    var userGameSelectionsFromFirst = resultsByGame[0].UserGameSelections;
 
                     // now check all the subsequent userGameResults
                     for (int i = 1; i < resultsByGame.Count; i++)
                     {
                         var userGameResultsNext = resultsByGame[i].UserGameResults;
+                        var userGameSelectionsNext = resultsByGame[i].UserGameSelections;
 
                         if (userGameResultsFromFirst.Count != userGameResultsNext.Count)
                         {
                             throw new ArgumentException(
                                             string.Format(
-                                            "The number of users does not match GameId:{0} and GameId:{1}",
+                                            "The number of users does not match GameId:{0} and GameId:{1} for UserGameResults",
+                                            resultsByGame[0].GameResult.GameSpread.GameId,
+                                            resultsByGame[i].GameResult.GameSpread.GameId));
+                        }
+
+                        if (userGameSelectionsFromFirst.Count != userGameSelectionsNext.Count)
+                        {
+                            throw new ArgumentException(
+                                            string.Format(
+                                            "The number of users does not match GameId:{0} and GameId:{1} for UserGameSelections",
                                             resultsByGame[0].GameResult.GameSpread.GameId,
                                             resultsByGame[i].GameResult.GameSpread.GameId));
                         }
@@ -91,7 +128,7 @@ namespace Selectum.Controllers
                             {
                                 throw new ArgumentException(
                                                 string.Format(
-                                                "The users (UserId:{2}, UserId:{3}) in position:{4} do not match for GameId:{0} and GameId:{1}",
+                                                "The users (UserId:{2}, UserId:{3}) in position:{4} do not match for GameId:{0} and GameId:{1} for UserGameResults",
                                                 resultsByGame[0].GameResult.GameSpread.GameId,
                                                 resultsByGame[i].GameResult.GameSpread.GameId,
                                                 userGameResultsFromFirst[x].UserGameSelection.UserId,
@@ -99,16 +136,53 @@ namespace Selectum.Controllers
                                                 x));
                             }
                         }
+
+                        for (int x = 0; x < userGameSelectionsNext.Count; x++)
+                        {
+                            if (userGameSelectionsFromFirst[x].UserId !=
+                                userGameSelectionsNext[x].UserId)
+                            {
+                                throw new ArgumentException(
+                                                string.Format(
+                                                "The users (UserId:{2}, UserId:{3}) in position:{4} do not match for GameId:{0} and GameId:{1} for UserGameSelection",
+                                                resultsByGame[0].GameResult.GameSpread.GameId,
+                                                resultsByGame[i].GameResult.GameSpread.GameId,
+                                                userGameSelectionsFromFirst[x].UserId,
+                                                userGameSelectionsNext[x].UserId,
+                                                x));
+                            }
+                        }
                     }
 
+                    List<int> totals = new List<int>();
+                    // lastly calculate a total row
+                    foreach (var user in users)
+                    {
+                        int total = 0;
+                        foreach (var result in resultsByGame)
+                        {
+                            total += result.UserGameResults
+                                                .Where(ur => ur.UserGameSelection.UserId == user.UserId)
+                                                .Sum(ur => ur.BetPoints);
+                        }
+
+                        totals.Add(total);
+                    }
+
+                    ViewBag.MessageToUser = string.Format("Until all users have submitted their data, your data might be shifted over to the left (under the wrong user's name)");
+
                     resultsViewModel.Results = resultsByGame;
-                    return View(resultsViewModel);
+                    resultsViewModel.Totals = totals;
                 }
                 else
                 {
                     // there were no game results found for this filter
-                    throw new ArgumentException(string.Format("Missing game results for given GameFilterId:{0}", currentGameFilterId));
+                    //throw new ArgumentException(string.Format("Missing game results for given GameFilterId:{0}", currentGameFilterId));
+
+                    ViewBag.MessageToUser = string.Format("Missing game results for given GameFilterId:{0}", currentGameFilterId);
                 }
+
+                return View(resultsViewModel);
             }
             catch (Exception ex)
             {

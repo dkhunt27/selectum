@@ -32,22 +32,18 @@
                         <li class="dropdown">
                             <a id="admindd" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="admindd">
-                                <li>@Html.ActionLink("Processes", "GameFilter", "Admin")</li>
+                                <li>@Html.ActionLink("Processes", "Index", "Admin")</li>
                                 <li class="divider"></li>
                                 <li>@Html.ActionLink("Teams", "Index", "Team")</li>
                                 <li>@Html.ActionLink("Game Filters", "Index", "GameFilter")</li>
                                 <li>@Html.ActionLink("Games", "Index", "Game")</li>
                             </ul>
                         </li>
-                    </ul>
-                    <ul class="nav pull-right">
                         <li>@Html.ActionLink("About", "About", "Home")</li>
                         @*<li>@Html.ActionLink("Contact", "Contact", "Home")</li>*@
-                        <li>
-                            <ul class="nav pull-right secondary-nav">
-                                <li>@Html.Partial("_LoginPartial")</li>
-                            </ul>
-                        </li>
+                    </ul>
+                    <ul class="nav pull-right" role="navigation">
+                        @Html.Partial("_LoginPartial")
                     </ul>
                 </div>
             </div>

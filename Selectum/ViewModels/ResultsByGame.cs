@@ -14,8 +14,10 @@ namespace Selectum.ViewModels
         {
             Users = new List<User>();
             Results = new List<ResultByGame>();
+            Totals = new List<int>();
         }
         public List<User> Users { get; set; }
         public List<ResultByGame> Results { get; set; }
+        public List<int> Totals { get; set; }
     }
 }

@@ -1,0 +1,7 @@
+﻿
+@{
+    if (!WebSecurity.Initialized)
+    {
+        WebSecurity.InitializeDatabaseConnection("SelectumContext", "UserProfile", "UserId", "UserName", autoCreateTables: true);
+    }
+}

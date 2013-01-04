@@ -1,34 +1,41 @@
 ﻿@model IEnumerable<Selectum.Models.Game>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Game";
 }
 
-<h2>Index</h2>
-
 <div class="navbar">
-  <div class="navbar-inner">
-    <a class="brand">Results</a>
-    <ul class="nav">
-        <li>
-            <a>Week</a>
-        </li>
-        @foreach (var gameFilter in ViewBag.GameFilters)
-        {
-            var active = "";
-            if (gameFilter.Selected)
-            {
-                active = "active";
-            }
-            var href = "/Game/GameFilter/" + @gameFilter.Value;
-        <li>
-            <a class="@active" href="@href">
-                @gameFilter.Value
-            </a>   
-        </li>
-        }
-    </ul>
-  </div>
+    <div class="navbar-inner">
+
+        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </a>
+
+        <a class="brand disabled">Game</a>
+        <div class="nav-collapse collapse">
+            <ul class="nav">
+                <li>
+                    <a class="disabled">Week</a>
+                </li>
+                @foreach (var gameFilter in ViewBag.GameFilters)
+                {
+                    var active = "";
+                    if (gameFilter.Selected)
+                    {
+                        active = "active";
+                    }
+                    var href = "/Game/GameFilter/" + @gameFilter.Value;
+                <li>
+                    <a class="@active" href="@href">
+                        @gameFilter.Value
+                    </a>   
+                </li>
+                }
+            </ul>
+        </div>
+    </div>
 </div>
 
 <p>

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Selectum.DAL;
 
 namespace Selectum.Models
 {
@@ -9,7 +10,12 @@ namespace Selectum.Models
     {
         public GameFilter GetGameFilterByDate(List<GameFilter> gameFilters, DateTime searchDate)
         {
-            return gameFilters.FirstOrDefault(gf => gf.GameFilterStartDate <= searchDate && gf.GameFilterEndDate >= searchDate);
+            GameFilter gameFilter = gameFilters.FirstOrDefault(gf => gf.GameFilterStartDate <= searchDate && gf.GameFilterEndDate >= searchDate);
+            if (gameFilter == null)
+            {
+                gameFilter = gameFilters.Last(_ => _.GameFilterAvailable == true);
+            }
+            return gameFilter;
         }
 
         public int GetPlacedBets(List<UserGameSelection> userGameSelections)
@@ -43,6 +49,41 @@ namespace Selectum.Models
         public int GetPossibleBets(List<UserGameSelection> userGameSelections)
         {
             return userGameSelections.Count();
+        }
+
+        public List<UserGameSelection> CreateDefaultUserGameSelections(List<GameSpread> gameSpreads, User user, Team noBetTeam)
+        {
+            var userGameSelections = new List<UserGameSelection>();
+
+            // initialize the userGameSelections with No Bets
+            foreach (var gameSpread in gameSpreads)
+            {
+                userGameSelections.Add(CreateDefaultUserGameSelection(gameSpread, user, noBetTeam));
+            }
+            
+            return userGameSelections;
+        }
+
+        public UserGameSelection CreateDefaultUserGameSelection(GameSpread gameSpread, User user, Team noBetTeam)
+        {
+            if (gameSpread == null) throw new ArgumentNullException("gameSpread");
+            if (noBetTeam == null) throw new ArgumentNullException("noBetTeam");
+            if (user == null) throw new ArgumentNullException("user");
+
+            // create the userGameSelection with No Bets
+            var userGameSelection = new UserGameSelection()
+                                         {
+                                             Bet = 0,
+                                             GameSpreadId = gameSpread.GameSpreadId,
+                                             PickTeamId = noBetTeam.TeamId,
+                                             GameSpread = gameSpread,
+                                             PickTeam = noBetTeam,
+                                             UserId = user.UserId,
+                                             User = user,
+                                             Saved = false
+                                         };
+
+            return userGameSelection;
         }
     }
 }

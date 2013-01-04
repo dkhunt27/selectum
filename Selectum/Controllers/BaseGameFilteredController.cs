@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Selectum.DAL;
 using Selectum.Models;
+using WebMatrix.WebData;
 
 namespace Selectum.Controllers
 {
@@ -12,6 +13,28 @@ namespace Selectum.Controllers
     {
         protected SelectumContext db = new SelectumContext();
 
+        protected int GetUserIdentityId()
+        {
+            if (User == null || User.Identity == null)
+            {
+                throw new ArgumentException("Your user information was not properly loaded");
+            }
+            // convert the security user to its user profile id
+            //var userProfileId = 2;
+            var userProfileId = WebSecurity.GetUserId(User.Identity.Name);
+
+            // convert the user profile userid to the data userid
+            var userToUserProfile = db.UserToUserProfiles.FirstOrDefault(utup => utup.UserProfileId == userProfileId);
+            if (userToUserProfile == null)
+            {
+                throw new ArgumentException(string.Format("Your user profile is not associated with a selectum user yet. Please contact the admin and ask for the association to be set up for userName:{0}", User.Identity.Name));
+            }
+
+            // set the userId (the data user id)
+            var userId = userToUserProfile.UserId;
+
+            return userId;
+        }
         protected void SetViewBagGameFilter(int selectedGameFilterId)
         {
             List<SelectListItem> gameFilters = new List<SelectListItem>();
@@ -32,6 +55,12 @@ namespace Selectum.Controllers
             ViewBag.MessageToUserSelectedGameFilterId = "Selected " + gameFilters.First(gf => gf.Selected).Text;
         }
 
+        protected void SetViewBagGameFilterToFirst()
+        {
+            var firstGameFilterId = db.GameFilters.OrderBy(_ => _.GameFilterId).FirstOrDefault().GameFilterId;
+            SetViewBagGameFilter(firstGameFilterId);
+        }
+
         protected int validateGameFilterId(int id)
         {
             // make sure it is a valid gameFilterId
@@ -47,35 +76,24 @@ namespace Selectum.Controllers
             }
         }
 
-        protected int getSelectedGameFilterId()
-        {
-            // make sure it is a valid gameFilterId
-
-            foreach (var gameFilter2 in ViewBag.GameFilters)
-            {
-            }
-
-            var gameFilter = ((List<SelectListItem>)ViewBag.GameFilters).FirstOrDefault(gf => gf.Selected);
-
-            if (gameFilter == null)
-            {
-                throw new ArgumentException("A selected gameFilter in teh ViewBag was not found");
-            }
-            else
-            {
-                return Convert.ToInt32(gameFilter.Value);
-            }
-        }
-
         public ActionResult Index()
         {
             var utilities = new ModelUtilities();
-
             var now = DateTime.Now;
             //var now = new DateTime(2012, 12, 16);
-            var currentGameFilterId = utilities.GetGameFilterByDate(db.GameFilters.ToList(), now).GameFilterId;
+            string viewBagMessageToUser = string.Empty;
 
-            return RedirectToAction(string.Concat("GameFilter/", currentGameFilterId));
+            try
+            {
+                var currentGameFilterId = utilities.GetGameFilterByDate(db.GameFilters.ToList(), now).GameFilterId;
+                return RedirectToAction(string.Concat("GameFilter/", currentGameFilterId));
+            }
+            catch (Exception ex)
+            {
+                ViewBag.MessageToUser = string.Format("Sorry an error occurred. Please let the admin know. Error:{0}", ex.Message);
+                SetViewBagGameFilterToFirst();
+                return View();
+            }
         }
     }
 }

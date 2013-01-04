@@ -45,16 +45,32 @@
         <td>
             @Html.DisplayFor(gr => results.GameFilter.GameFilterName)
         </td>
-        @foreach (var userResults in results.UserResults)
+        @for (int i = 0; i < results.UserResults.Count; i++)
         {
+            var userResults = results.UserResults[i];
+            var place = 0;
+            if (results.Places.Count > 0)
+            {
+                place = results.Places[i];
+            }
+            
             <td>
                 @Html.DisplayFor(ugr => userResults.Points)
-            </td>
-            <td>
-                @Html.DisplayFor(ugr => userResults.Wins)
+                @if (place == 1)
+                {
+                    <!--span class="badge badge-success">1</!--span-->
+                    <i class="icon-star"></i>
+                }
+                @if (place == 4)
+                {
+                    <!--i class="icon-thumbs-down"></i-->
+                }
             </td>
             <td>
                 @Html.DisplayFor(ugr => userResults.Bets)
+            </td>
+            <td>
+                @Html.DisplayFor(ugr => userResults.Wins)
             </td>
         }
     </tr>

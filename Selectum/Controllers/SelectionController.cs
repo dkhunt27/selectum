@@ -14,7 +14,7 @@ using WebMatrix.WebData;
 
 namespace Selectum.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "User")]
     public class SelectionController : BaseGameFilteredController
     {
         public ActionResult GameFilter(int id = 0)
@@ -28,18 +28,7 @@ namespace Selectum.Controllers
 
                 var utilities = new ModelUtilities();
 
-                // convert the security user to its user profile id
-                //var userProfileId = 2;
-                var userProfileId = WebSecurity.GetUserId(User.Identity.Name);
-
-                var userToUserProfile = db.UserToUserProfiles.FirstOrDefault(utup => utup.UserProfileId == userProfileId);
-                if (userToUserProfile == null)
-                {
-                    throw new ArgumentException(string.Format("Your user profile is not associated with a selectum user yet. Please contact the admin and ask for the association to be set up for userName:{0}", User.Identity.Name));
-                }
-
-                // convert the user profile userid to the data userid
-                var userId = userToUserProfile.UserId;
+                var userId = GetUserIdentityId();
 
 
                 var userGameSelections = db.UserGameSelections
@@ -57,38 +46,22 @@ namespace Selectum.Controllers
                 if (userGameSelections.Count == 0)
                 {
                     var gameSpreads = db.GameSpreads
-                                            .Include(g => g.Game)
-                                            .Include(g => g.FavoriteTeam)
-                                            .Include(g => g.UnderdogTeam)
-                                            .Where(g => g.Game.GameFilterId == currentGameFilterId);
+                                            .Where(_ => _.Game.GameFilterId == currentGameFilterId)
+                                            .OrderBy(_ => _.GameId)
+                                            .ToList();
 
-                    var noBetTeam = db.Teams.First(t => t.TeamLongName == "No Bet");
+                    var user = db.Users.FirstOrDefault(_=>_.UserId == userId);
 
-                    var user = db.Users.First(u => u.UserId == userId);
+                    var noBetTeam = db.Teams.FirstOrDefault(_ => _.TeamLongName == "No Bet");
 
-                    // initialize the userGameSelections with No Bets
-                    foreach (var gameSpread in gameSpreads)
-                    {
-                        userGameSelections.Add(new UserGameSelection()
-                                            {
-                                                Bet = 0,
-                                                GameSpreadId = gameSpread.GameSpreadId,
-                                                PickTeamId = noBetTeam.TeamId,
-                                                GameSpread = gameSpread,
-                                                PickTeam = noBetTeam,
-                                                UserId = user.UserId,
-                                                User = user,
-                                                Saved = false
-                                            });
-                    }
+                    userGameSelections = utilities.CreateDefaultUserGameSelections(gameSpreads, user, noBetTeam);
 
-                    //save the no bets to the database to initialize the usergameselectionid which is used to identify the rows in the html
+                    // save to the db so the output has unique row numbers (it uses UserGameSelectionId)
                     userGameSelections.ForEach(ugs => db.UserGameSelections.Add(ugs));
                     db.SaveChanges();
                 }
 
                 var selection = new Selection();
-
 
                 //selection.UserGameSelections = userGameSelections;
                 selection.PlacedBets = utilities.GetPlacedBets(userGameSelections);
@@ -188,38 +161,46 @@ namespace Selectum.Controllers
             var saveCount = 0;
             if (ModelState.IsValid)
             {
-                // server side validations
-                foreach (var gameRow in selection.GameRows)
+                // make sure they spent the correct amount
+                if (selection.SpentPoints >= selection.MinSpentPointsForAnyOneWeek)
                 {
-                    var ugs = gameRow.UserGameSelection;
-
-                    // make sure the picked team is correct
-                    if (ugs.PickTeamId != 1 && 
-                        ugs.PickTeamId != ugs.GameSpread.FavoriteTeamId && 
-                        ugs.PickTeamId != ugs.GameSpread.UnderdogTeamId)
+                    // make sure they spent all their bonus points
+                    if (selection.BonusPoints == 0)
                     {
-                        throw new ArgumentException(
-                                        string.Format("PickTeamId not valid. UserGameSelectionId:{0} PickTeamId:{1}", 
-                                        ugs.UserGameSelectionId, 
-                                        ugs.PickTeamId));
+                        // server side validations
+                        foreach (var gameRow in selection.GameRows)
+                        {
+                            var ugs = gameRow.UserGameSelection;
+
+                            // make sure the picked team is correct
+                            if (ugs.PickTeamId != 1 &&
+                                ugs.PickTeamId != ugs.GameSpread.FavoriteTeamId &&
+                                ugs.PickTeamId != ugs.GameSpread.UnderdogTeamId)
+                            {
+                                throw new ArgumentException(
+                                                string.Format("PickTeamId not valid. UserGameSelectionId:{0} PickTeamId:{1}",
+                                                ugs.UserGameSelectionId,
+                                                ugs.PickTeamId));
+                            }
+                        }
+
+                        foreach (var gameRow in selection.GameRows)
+                        {
+                            var ugs = gameRow.UserGameSelection;
+                            ugs.Saved = true;  // mark this record as the user saved it
+                            var existing = db.UserGameSelections.Find(ugs.UserGameSelectionId);
+                            db.Entry(existing).CurrentValues.SetValues(ugs);
+
+                            //((IObjectContextAdapter)db).ObjectContext.Detach(existing);
+
+                            //db.Entry(ugs).State = EntityState.Modified;
+                            db.SaveChanges();
+                            saveCount++;
+                        }
                     }
                 }
-
-                foreach (var gameRow in selection.GameRows)
-                {
-                    var ugs = gameRow.UserGameSelection;
-                    ugs.Saved = true;  // mark this record as the user saved it
-                    var existing = db.UserGameSelections.Find(ugs.UserGameSelectionId);
-                    db.Entry(existing).CurrentValues.SetValues(ugs);
-                    
-                    //((IObjectContextAdapter)db).ObjectContext.Detach(existing);
-
-                    //db.Entry(ugs).State = EntityState.Modified;
-                    db.SaveChanges();
-                    saveCount++;
-                }
-                return Json(saveCount);
             }
+
             return Json(saveCount);
         }
 

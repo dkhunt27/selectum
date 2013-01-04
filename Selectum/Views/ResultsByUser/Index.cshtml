@@ -1,0 +1,77 @@
+﻿@model Selectum.ViewModels.ResultsByUser
+
+@{
+    ViewBag.Title = "Results";
+}
+
+<h2>Results</h2>
+
+<div class="navbar">
+  <div class="navbar-inner">
+    <a class="brand">Results</a>
+    <ul class="nav">
+        <li>
+            <a>Week</a>
+        </li>
+        @foreach (var gameFilter in ViewBag.GameFilters)
+        {
+            var active = "";
+            if (gameFilter.Selected)
+            {
+                active = "active";
+            }
+            var href = "/ResultsByUser/GameFilter/" + @gameFilter.Value;
+        <li>
+            <a class="@active" href="@href">
+                @gameFilter.Value
+            </a>   
+        </li>
+        }
+    </ul>
+  </div>
+</div>
+<table class="table">
+    <thead>
+        <th>
+            <span>Favorite</span> <br/>
+            <span>Spread</span> <br/>
+            <span>Underdog</span>
+        </th>
+        <th>
+        </th>
+        @foreach (var gameResult in Model.GameResults)
+        {
+            <th>
+                @Html.DisplayFor(gr => gameResult.GameSpread.FavoriteTeam.TeamShortName) <br />
+                @Html.DisplayFor(gr => gameResult.GameSpread.Spread) <br />
+                @Html.DisplayFor(gr => gameResult.GameSpread.UnderdogTeam.TeamShortName)
+            </th>
+            <th>
+                @Html.DisplayFor(gr => gameResult.FavoriteScore) <br />
+                @Html.DisplayFor(gr => gameResult.GamePeriod) <br />
+                @Html.DisplayFor(gr => gameResult.UnderdogScore)
+            </th>
+        }
+    </thead>
+
+@foreach (var results in Model.Results)
+{
+    <tr>
+        <td>
+            @Html.DisplayFor(gfr => results.User.UserName)
+        </td>
+        <td>
+        </td>
+        @foreach (var userGameResults in results.UserGameResults)
+        {
+        <td>
+            @Html.DisplayFor(ugr => userGameResults.UserGameSelection.PickTeam.TeamShortName)
+        </td>
+        <td>
+            @Html.DisplayFor(ugr => userGameResults.BetPoints)
+        </td>
+        }
+    </tr>
+}
+
+</table>

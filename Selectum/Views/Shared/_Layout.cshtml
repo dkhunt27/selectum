@@ -4,8 +4,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>    
     <link href="@Url.Content("~/Content/bootstrap.min.css")" rel="stylesheet" type="text/css" />
-    @*<link href="@Url.Content("~/Content/bootstrap-responsive.min.css")" rel="stylesheet" type="text/css" />*@
+    <link href="@Url.Content("~/Content/bootstrap-responsive.min.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/Content/site.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Scripts/Bundles/log4javascript/main.css")" rel="stylesheet" type="text/css" />
     @Scripts.Render("~/Scripts/Libs/jquery-1.8.3.js")
     @Scripts.Render("~/Scripts/Libs/jquery.validate.min.js")
     @Scripts.Render("~/Scripts/Libs/bootstrap.min.js")
@@ -17,34 +18,63 @@
             padding-bottom: 40px;
         }
     </style-->
+    @Scripts.Render("~/Scripts/Bundles/log4javascript/log4javascript.js")
+    <script type="text/javascript">
+        // Create the logger
+        var log = log4javascript.getLogger();
+
+        // Create a PopUpAppender with default options
+        //var popUpAppender = new log4javascript.PopUpAppender();
+
+        // Change the desired configuration options
+        //popUpAppender.setFocusPopUp(true);
+        //popUpAppender.setNewestMessageAtTop(true);
+
+        // Add the appender to the logger
+        //log.addAppender(popUpAppender);
+
+    </script>
+    <script type="text/javascript"> if (!window.console) console = { log: function () { } }; </script>
 </head>
 <body>
     <div class="container">
         <div class="row">
             <div class="navbar navbar-static-top">
                 <div class="navbar-inner">
+                          
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+
                     <a class="brand disabled">Selectum</a>
-                    <ul class="nav" role="navigation">
-                        <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                        <li>@Html.ActionLink("Selections", "Index", "Selection")</li>
-                        <li>@Html.ActionLink("Weekly Results", "Index", "ResultsByGame")</li>
-                        <li>@Html.ActionLink("Standings", "Index", "OverallResultsByGameFilter")</li>
-                        <li class="dropdown">
-                            <a id="admindd" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="admindd">
-                                <li>@Html.ActionLink("Processes", "Index", "Admin")</li>
-                                <li class="divider"></li>
-                                <li>@Html.ActionLink("Teams", "Index", "Team")</li>
-                                <li>@Html.ActionLink("Game Filters", "Index", "GameFilter")</li>
-                                <li>@Html.ActionLink("Games", "Index", "Game")</li>
-                            </ul>
-                        </li>
-                        <li>@Html.ActionLink("About", "About", "Home")</li>
-                        @*<li>@Html.ActionLink("Contact", "Contact", "Home")</li>*@
-                    </ul>
-                    <ul class="nav pull-right" role="navigation">
-                        @Html.Partial("_LoginPartial")
-                    </ul>
+                    <div class="nav-collapse collapse">
+                        <ul class="nav" role="navigation">
+                            <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                            <li>@Html.ActionLink("Selections", "Index", "Selection")</li>
+                            <li>@Html.ActionLink("Weekly Results", "Index", "ResultsByGame")</li>
+                            <li>@Html.ActionLink("Standings", "Index", "OverallResultsByGameFilter")</li>
+                            @if (ViewContext.HttpContext.User.IsInRole("Admin"))
+                            {
+                                <li class="dropdown">
+                                    <a id="admindd" href="#" role="button" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
+                                    <ul class="dropdown-menu" role="menu" aria-labelledby="admindd">
+                                        <li>@Html.ActionLink("Processes", "Index", "Admin")</li>
+                                        <li class="divider"></li>
+                                        <li>@Html.ActionLink("Teams", "Index", "Team")</li>
+                                        <li>@Html.ActionLink("Game Filters", "Index", "GameFilter")</li>
+                                        <li>@Html.ActionLink("Games", "Index", "Game")</li>
+                                        <li>@Html.ActionLink("GameResult", "Index", "GameResult")</li>
+                                    </ul>
+                                </li>
+                            }
+                            <li>@Html.ActionLink("About", "About", "Home")</li>
+                        </ul>
+                        <ul class="nav pull-right" role="navigation">
+                            @Html.Partial("_LoginPartial")
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>

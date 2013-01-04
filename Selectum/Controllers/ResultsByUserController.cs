@@ -11,7 +11,7 @@ using Selectum.ViewModels;
 
 namespace Selectum.Controllers
 {
-        [Authorize]
+    [Authorize(Roles = "User")]
     public class ResultsByUserController : BaseGameFilteredController
     {
         //

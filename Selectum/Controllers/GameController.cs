@@ -10,7 +10,7 @@ using Selectum.DAL;
 
 namespace Selectum.Controllers
 {
-    [Authorize]
+    [Authorize (Roles="Admin")]
     public class GameController : BaseGameFilteredController
     {
         //

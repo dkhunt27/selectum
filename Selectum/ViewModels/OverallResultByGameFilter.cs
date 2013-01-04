@@ -34,10 +34,12 @@ namespace Selectum.ViewModels
             }
             GameFilter = gameFilter;
             UserResults = userResults;
+            Places = new List<int>();
         }
 
         public GameFilter GameFilter { get; set; }
         public List<UserResult> UserResults { get; set; }
+        public List<int> Places { get; set; }
 
     }
 }

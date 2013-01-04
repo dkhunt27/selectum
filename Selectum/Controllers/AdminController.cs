@@ -15,7 +15,7 @@ using System.Text;
 
 namespace Selectum.Controllers
 {
-    [Authorize]
+    [Authorize (Roles="Admin")]
     public class AdminController : BaseGameFilteredController
     {
         private int extraPointFactorPerBetOverMin = Convert.ToInt32(ConfigurationManager.AppSettings["ExtraPointFactorPerBetOverMin"]);

@@ -11,7 +11,7 @@ using Selectum.ViewModels;
 
 namespace Selectum.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "User")]
     public class OverallResultsByGameFilterController : Controller
     {
         protected SelectumContext db = new SelectumContext();
@@ -76,10 +76,36 @@ namespace Selectum.Controllers
                 foreach (var gameFilter in gameFilters)
                 {
                     // make sure it is ordered by userId
-                    resultsByGameFilter.Add(new OverallResultByGameFilter(gameFilter, userResults
+
+                    var result = new OverallResultByGameFilter(gameFilter, userResults
                                                                                             .Where(ur => ur.GameFilterId == gameFilter.GameFilterId)
                                                                                             .OrderBy(ur => ur.UserId)
-                                                                                            .ToList()));
+                                                                                            .ToList());
+
+                    List<int> places = new List<int>();
+                    
+                    // sort the copy of the user results by points, desc
+                    List<UserResult> userResultsRankByPoints = result.UserResults.OrderByDescending(ur => ur.Points).ToList();
+
+                    // now match each user points, so the ranked one to get their position/ranking
+
+                    foreach (var userResult in result.UserResults)
+                    {
+                        for (int i = 0; i < userResultsRankByPoints.Count; i++)
+                        {
+                            if (userResult.Points == userResultsRankByPoints[i].Points)
+                            {
+                                places.Add(i+1);
+                                break;
+                            }
+                        }
+                    }
+
+                    result.Places = places;
+
+                    resultsByGameFilter.Add(result);
+
+
                 }
                 
                 return resultsByGameFilter;

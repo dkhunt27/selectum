@@ -1,33 +1,43 @@
-﻿@model Selectum.ViewModels.ResultsByGame
+﻿@model Selectum.ViewModels.ResultsByGameViewModel
 
 @{
     ViewBag.Title = "Results";
 }
 
 <div class="navbar">
-  <div class="navbar-inner">
-    <a class="brand disabled">Results</a>
-    <ul class="nav">
-        <li>
-            <a class="disabled">Week</a>
-        </li>
-        @foreach (var gameFilter in ViewBag.GameFilters)
-        {
-            var active = "";
-            if (gameFilter.Selected)
-            {
-                active = "active";
-            }
-            var href = "/ResultsByGame/GameFilter/" + @gameFilter.Value;
-        <li>
-            <a class="@active" href="@href">
-                @gameFilter.Value
-            </a>   
-        </li>
-        }
-    </ul>
-  </div>
+    <div class="navbar-inner">
+
+        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </a>
+
+        <a class="brand disabled">Results</a>
+        <div class="nav-collapse collapse">
+            <ul class="nav">
+                <li>
+                    <a class="disabled">Week</a>
+                </li>
+                @foreach (var gameFilter in ViewBag.GameFilters)
+                {
+                    var active = "";
+                    if (gameFilter.Selected)
+                    {
+                        active = "active";
+                    }
+                    var href = "/ResultsByGame/GameFilter/" + @gameFilter.Value;
+                <li>
+                    <a class="@active" href="@href">
+                        @gameFilter.Value
+                    </a>   
+                </li>
+                }
+            </ul>
+        </div>
+    </div>
 </div>
+
 @if (!string.IsNullOrWhiteSpace(ViewBag.MessageToUser))
 {
     <div class="alert alert-error">
@@ -78,44 +88,47 @@
         }
     </tr>
 
-@foreach (var results in Model.Results)
+@foreach (var gameRow in Model.GameRows)
 {
     <tr>
         <td>
-            @Html.DisplayFor(gr => results.GameResult.GameSpread.FavoriteTeam.TeamLongName)
+            @Html.DisplayFor(gr => gameRow.FavoriteTeamName)
         </td>
         <td>
-            @Html.DisplayFor(gr => results.GameResult.GameSpread.UnderdogTeam.TeamLongName)
+            @Html.DisplayFor(gr => gameRow.UnderdogTeamName)
         </td>
         <td>
-            @Html.DisplayFor(gr => results.GameResult.GameSpread.Spread)
+            @Html.DisplayFor(gr => gameRow.Spread)
         </td>
         <td>
-            @Html.DisplayFor(gr => results.GameResult.WinnerTeam.TeamLongName)
+            @Html.DisplayFor(gr => gameRow.WinnerTeamName)
         </td>
-        @for (var i=0; i<results.UserGameSelections.Count; i++)
+        @foreach (var userData in gameRow.UsersData)
         {
-            var userGameSelection = results.UserGameSelections[i];
-        <td>
-            @Html.DisplayFor(ugs => userGameSelection.PickTeam.TeamShortName)
-        </td>
-        <td>
-            @Html.DisplayFor(ugs => userGameSelection.Bet)
-        </td>
-        <td>
-            @if (results.UserGameResults.Count == 0)
+            var tdClass = "alert alert-warning";
+            
+            if (userData.Result > 0) 
             {
-                @Html.Raw(0)
+                tdClass = "alert alert-success";
             }
-            else
+            else if (userData.Result < 0)
             {
-                @Html.DisplayFor(ugr => results.UserGameResults[i].BetPoints)
+                tdClass = "alert alert-danger";
             }
+            
+        <td class="@tdClass">
+            @Html.DisplayFor(ugs => userData.Pick)
+        </td>
+        <td class="@tdClass">
+            @Html.DisplayFor(ugs => userData.Bet)
+        </td>
+        <td class="@tdClass">
+            @Html.DisplayFor(ugr => userData.Result)
         </td>
         }
     </tr>
 }
-    <tr>
+    <tr class="alert alert-info">
         <td colspan="4">
             Total
         </td>
@@ -123,6 +136,28 @@
         {
             <td colspan="3">
                 @total
+            </td>
+        }
+    </tr>
+    <tr class="alert alert-success">
+        <td colspan="4">
+            Potential Gains Remaining
+        </td>
+        @foreach(var gain in Model.PotentialGains)
+        {
+            <td colspan="3">
+                @gain
+            </td>
+        }
+    </tr>
+    <tr class="alert alert-danger">
+        <td colspan="4">
+            Potential Losses Remaining
+        </td>
+        @foreach(var loss in Model.PotentialLosses)
+        {
+            <td colspan="3">
+                @loss
             </td>
         }
     </tr>

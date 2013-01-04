@@ -10,6 +10,10 @@ namespace Selectum.ViewModels
 {
     public class ResultByGame
     {
+        public ResultByGame()
+        {
+
+        }
         public ResultByGame(GameResult gameResult, List<UserGameResult> userGameResults, List<UserGameSelection> userGameSelections)
         {
             if (gameResult == null) throw new ArgumentNullException("gameResult");

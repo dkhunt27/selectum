@@ -3,29 +3,39 @@
 }
 
 <div class="navbar">
-  <div class="navbar-inner">
-    <a class="brand disabled">Admin Functions</a>
-    <ul class="nav">
-        <li>
-            <a class="disabled">Week</a>
-        </li>
-        @foreach (var gameFilter in ViewBag.GameFilters)
-        {
-            var active = "";
-            if (gameFilter.Selected)
-            {
-                active = "active";
-            }
-            var href = "/Admin/GameFilter/" + @gameFilter.Value;
-        <li>
-            <a class="@active" href="@href">
-                @gameFilter.Value
-            </a>   
-        </li>
-        }
-    </ul>
-  </div>
+    <div class="navbar-inner">
+
+        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </a>
+
+        <a class="brand disabled">Admin Functions</a>
+        <div class="nav-collapse collapse">
+            <ul class="nav">
+                <li>
+                    <a class="disabled">Week</a>
+                </li>
+                @foreach (var gameFilter in ViewBag.GameFilters)
+                {
+                    var active = "";
+                    if (gameFilter.Selected)
+                    {
+                        active = "active";
+                    }
+                    var href = "/Admin/GameFilter/" + @gameFilter.Value;
+                <li>
+                    <a class="@active" href="@href">
+                        @gameFilter.Value
+                    </a>   
+                </li>
+                }
+            </ul>
+        </div>
+    </div>
 </div>
+
 @if (!string.IsNullOrWhiteSpace(ViewBag.MessageToUser))
 {
     <div class="alert alert-error">

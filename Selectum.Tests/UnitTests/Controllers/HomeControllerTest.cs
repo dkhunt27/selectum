@@ -12,7 +12,7 @@ namespace Selectum.Tests.UnitTests.Controllers
     [TestClass]
     public class HomeControllerTest
     {
-        [TestMethod]
+        /*[TestMethod]
         public void Index()
         {
             // Arrange
@@ -49,6 +49,6 @@ namespace Selectum.Tests.UnitTests.Controllers
 
             // Assert
             Assert.IsNotNull(result);
-        }
+        }*/
     }
 }

@@ -4,9 +4,9 @@ var selectionViewModel = function (data) {
     if (typeof data === "undefined") throw new Error("data passed to selectionViewModel is undefined");
     if (data === null) throw new Error("data passed to selectionViewModel is null");
 
-    self.debugLevel = 0;    
+    self.debugLevel = 1;    
 
-    if (self.debugLevel > 0) console.log(data);
+    if (self.debugLevel > 0) log.info(data);
 
 
 
@@ -58,13 +58,13 @@ var selectionViewModel = function (data) {
         self.betPickersDisabled(!self.betPickersDisabled());
         self.betPickersToggled(!self.betPickersToggled());
 
-        console.log(self.betPickersActive());
-        console.log(self.betPickersDisabled());
-        console.log(self.betPickersToggled());
+        log.trace(self.betPickersActive());
+        log.trace(self.betPickersDisabled());
+        log.trace(self.betPickersToggled());
     };
 
     self.userMadeSelection = function (selection, selectionClass, rowClass, viewModel, gameRow, event) {
-        if (self.debugLevel > 0) console.log("userMadeSelection");
+        if (self.debugLevel > 0) log.info("userMadeSelection");
         self.assertNotUndefinedOrNull(selection, "userMadeSelection", "selection");
         self.assertNotUndefinedOrNull(selectionClass, "userMadeSelection", "selectionClass");
         self.assertNotUndefinedOrNull(rowClass, "userMadeSelection", "rowClass");
@@ -116,7 +116,7 @@ var selectionViewModel = function (data) {
     };
 
     self.userMadeBet = function (bet, viewModel, gameRow, event) {
-        if (self.debugLevel > 0) console.log("userMadeBet");
+        if (self.debugLevel > 0) log.info("userMadeBet");
         self.assertNotUndefinedOrNull(bet, "userMadeBet", "bet");
         self.assertNotUndefinedOrNull(viewModel, "userMadeBet", "viewModel");
         self.assertNotUndefinedOrNull(gameRow, "userMadeBet", "gameRow");
@@ -132,7 +132,7 @@ var selectionViewModel = function (data) {
     /**
     */
     self.initializeBet = function (userGameSelection, betPickers, selectionDisabled) {
-        if (self.debugLevel > 0) console.log("initializeBet");
+        if (self.debugLevel > 0) log.info("initializeBet");
         self.assertNotUndefinedOrNull(userGameSelection, "initializeBet", "userGameSelection");
         self.assertNotUndefinedOrNull(betPickers, "initializeBet", "betPickers");
         self.assertNotUndefinedOrNull(selectionDisabled, "initializeBet", "selectionDisabled");
@@ -145,7 +145,7 @@ var selectionViewModel = function (data) {
     /**
     */
     self.removeBet = function (gameRow) {
-        if (self.debugLevel > 0) console.log("removeBet");
+        if (self.debugLevel > 0) log.info("removeBet");
         self.assertNotUndefinedOrNull(gameRow, "removeBet", "gameRow");
 
         // disable the picker itself
@@ -158,7 +158,7 @@ var selectionViewModel = function (data) {
     /**
     */
     self.changeBet = function (userGameSelection, betPickers, newBet, selectionDisabled) {
-        if (self.debugLevel > 0) console.log("changeBet");
+        if (self.debugLevel > 0) log.info("changeBet");
         self.assertNotUndefinedOrNull(userGameSelection, "changeBet", "userGameSelection");
         self.assertNotUndefinedOrNull(betPickers, "changeBet", "betPickers");
         self.assertNotUndefinedOrNull(newBet, "changeBet", "newBet");
@@ -170,7 +170,7 @@ var selectionViewModel = function (data) {
     };
 
     self.initializeAllOtherVariables = function (gameRow, viewModel, selectionDisabled) {
-        if (self.debugLevel > 0) console.log("initializeAllOtherVariables");
+        if (self.debugLevel > 0) log.info("initializeAllOtherVariables");
         self.assertNotUndefinedOrNull(gameRow, "initializeAllOtherVariables", "gameRow");
         self.assertNotUndefinedOrNull(viewModel, "initializeAllOtherVariables", "viewModel");
         self.assertNotUndefinedOrNull(selectionDisabled, "initializeAllOtherVariables", "selectionDisabled");
@@ -183,7 +183,7 @@ var selectionViewModel = function (data) {
     /**
     */
     self.calculateAllOtherVariables = function (viewModel) {
-        if (self.debugLevel > 0) console.log("calculateAllOtherVariables");
+        if (self.debugLevel > 0) log.info("calculateAllOtherVariables");
         self.assertNotUndefinedOrNull(viewModel, "calculateAllOtherVariables", "viewModel");
 
         self.calculateTotalValues(viewModel.gameRows.gameRows, viewModel.MINSPENTPOINTSFORANYONEWEEK, viewModel.EXTRAPOINTFACTORPERBETOVERMIN);
@@ -212,7 +212,7 @@ var selectionViewModel = function (data) {
     /**
     */
     self.initializeBetPicker = function (bet, betPickers, selectionDisabled) {
-        if (self.debugLevel > 0) console.log("initializeBetPicker");
+        if (self.debugLevel > 0) log.info("initializeBetPicker");
         self.assertNotUndefinedOrNull(bet, "initializeBetPicker", "bet");
         self.assertNotUndefinedOrNull(betPickers, "initializeBetPicker", "betPickers");
         self.assertNotUndefinedOrNull(selectionDisabled, "initializeBetPicker", "selectionDisabled");
@@ -231,7 +231,7 @@ var selectionViewModel = function (data) {
     /**
     */
     self.resetAllOtherBetsToOne = function (gameRows, toggleBetClass, selectionDisabledForThisGameFilter) {
-        if (self.debugLevel > 0) console.log("resetAllOtherBetsToOne");
+        if (self.debugLevel > 0) log.info("resetAllOtherBetsToOne");
         self.assertNotUndefinedOrNull(gameRows, "resetAllOtherBetsToOne", "gameRows");
         self.assertNotUndefinedOrNull(toggleBetClass, "resetAllOtherBetsToOne", "toggleBetClass");
         self.assertNotUndefinedOrNull(selectionDisabledForThisGameFilter, "resetAllOtherBetsToOne", "selectionDisabledForThisGameFilter");
@@ -262,7 +262,7 @@ var selectionViewModel = function (data) {
      *              userGameSelection.maxGameBet;
      */
     self.initializeMinMaxBet = function (userGameSelection) {
-        if (self.debugLevel > 0) console.log("initializeMinMaxBet");
+        if (self.debugLevel > 0) log.info("initializeMinMaxBet");
         self.assertNotUndefinedOrNull(userGameSelection, "initializeMinMaxBet", "userGameSelection");
 
         if (userGameSelection.bet === 0) {
@@ -286,7 +286,7 @@ var selectionViewModel = function (data) {
      *              self.bonusPoints;
      */
     self.calculateTotalValues = function (gameRows, MINSPENTPOINTSFORANYONEWEEK, EXTRAPOINTFACTORPERBETOVERMIN) {
-        if (self.debugLevel > 0) console.log("calculateTotalValues");
+        if (self.debugLevel > 0) log.info("calculateTotalValues");
         self.assertNotUndefinedOrNull(gameRows, "calculateTotalValues", "gameRows");
         self.assertNotUndefinedOrNull(MINSPENTPOINTSFORANYONEWEEK, "calculateTotalValues", "MINSPENTPOINTSFORANYONEWEEK");
         self.assertNotUndefinedOrNull(EXTRAPOINTFACTORPERBETOVERMIN, "calculateTotalValues", "EXTRAPOINTFACTORPERBETOVERMIN");
@@ -332,7 +332,7 @@ var selectionViewModel = function (data) {
      *              self.maxPossibleAdditionalBetForAnyGameThisWeek;
      */
     self.calculateMaxPossibleAdditionalBetForAnyGameThisWeek = function (bonusPoints, MAXBETFORANYONEGAME) {
-        if (self.debugLevel > 0) console.log("calculateMaxPossibleAdditionalBetForAnyGameThisWeek");
+        if (self.debugLevel > 0) log.info("calculateMaxPossibleAdditionalBetForAnyGameThisWeek");
         self.assertNotUndefinedOrNull(bonusPoints, "calculateMaxPossibleAdditionalBetForAnyGameThisWeek", "bonusPoints");
         self.assertNotUndefinedOrNull(MAXBETFORANYONEGAME, "calculateMaxPossibleAdditionalBetForAnyGameThisWeek", "MAXBETFORANYONEGAME");
 
@@ -368,13 +368,13 @@ var selectionViewModel = function (data) {
      *              userGameSelection.maxGameBet (for each userGameSelection)
      */
     self.calculateMaxPossibleBetForEachGame = function (gameRows, maxPossibleAdditionalBetForAnyGameThisWeek, MAXBETFORANYONEGAME) {
-        if (self.debugLevel > 0) console.log("calculateMaxPossibleBetForEachGame");
+        if (self.debugLevel > 0) log.info("calculateMaxPossibleBetForEachGame");
         self.assertNotUndefinedOrNull(gameRows, "calculateMaxPossibleBetForEachGame", "gameRows");
         self.assertNotUndefinedOrNull(maxPossibleAdditionalBetForAnyGameThisWeek, "calculateMaxPossibleBetForEachGame", "maxPossibleAdditionalBetForAnyGameThisWeek");
         self.assertNotUndefinedOrNull(MAXBETFORANYONEGAME, "calculateMaxPossibleBetForEachGame", "MAXBETFORANYONEGAME");
 
-        console.log("maxPossibleAdditionalBetForAnyGameThisWeek:" + maxPossibleAdditionalBetForAnyGameThisWeek);
-        console.log("MAXBETFORANYONEGAME:" + MAXBETFORANYONEGAME);
+        //log.trace("maxPossibleAdditionalBetForAnyGameThisWeek:" + maxPossibleAdditionalBetForAnyGameThisWeek);
+        //log.trace("MAXBETFORANYONEGAME:" + MAXBETFORANYONEGAME);
         var maxGameBetLocal = 0;
 
         for (var i = 0; i < gameRows.length; i++) {
@@ -385,7 +385,7 @@ var selectionViewModel = function (data) {
     };
 
     self.calculateMaxPossibleBetForOneGame = function (userGameSelection, maxPossibleAdditionalBetForAnyGameThisWeek, MAXBETFORANYONEGAME) {
-        if (self.debugLevel > 0) console.log("calculateMaxPossibleBetForOneGame");
+        if (self.debugLevel > 0) log.info("calculateMaxPossibleBetForOneGame");
         self.assertNotUndefinedOrNull(userGameSelection, "calculateMaxPossibleBetForOneGame", "userGameSelection");
         self.assertNotUndefinedOrNull(maxPossibleAdditionalBetForAnyGameThisWeek, "calculateMaxPossibleBetForOneGame", "maxPossibleAdditionalBetForAnyGameThisWeek");
         self.assertNotUndefinedOrNull(MAXBETFORANYONEGAME, "calculateMaxPossibleBetForOneGame", "MAXBETFORANYONEGAME");
@@ -416,7 +416,7 @@ var selectionViewModel = function (data) {
     * @output   Disabled bet pickers 
     */
     self.disableAllBetPickers = function (betPickers, gameRowId) {
-        if (self.debugLevel > 0) console.log("disableAllBetPickers for gameRow:" + gameRowId);
+        if (self.debugLevel > 0) log.info("disableAllBetPickers for gameRow:" + gameRowId);
         self.assertNotUndefinedOrNull(betPickers, "disableAllBetPickers", "betPickers");
 
         for (var i = 0; i < betPickers.length; i++) {
@@ -432,7 +432,7 @@ var selectionViewModel = function (data) {
      * @output   Disabled bet picker
      */
     self.disableBetPicker = function (betPicker) {
-        if (self.debugLevel > 1) console.log("disableBetPicker");
+        if (self.debugLevel > 1) log.info("disableBetPicker");
         self.assertNotUndefinedOrNull(betPicker, "disableBetPicker", "betPicker");
 
         betPicker.disabled(true);
@@ -448,7 +448,7 @@ var selectionViewModel = function (data) {
     * @output   Toggles bet picker matching the bet and enables or disables the bet pickers based on selectionDisabled 
     */
     self.enableAllBetPickers = function (betPickers, bet, selectionDisabled) {
-        if (self.debugLevel > 0) console.log("enableAllBetPickers");
+        if (self.debugLevel > 0) log.info("enableAllBetPickers");
         self.assertNotUndefinedOrNull(betPickers, "enableAllBetPickers", "betPickers");
         self.assertNotUndefinedOrNull(bet, "enableAllBetPickers", "bet");
         self.assertNotUndefinedOrNull(selectionDisabled, "enableAllBetPickers", "selectionDisabled");
@@ -483,7 +483,7 @@ var selectionViewModel = function (data) {
     * @output   Toggles bet picker matching the bet and enables or disables the bet picker based on selectionDisabled 
     */
     self.enableBetPicker = function (betPicker, bet, selectionDisabled) {
-        if (self.debugLevel > 0) console.log("enableBetPicker for bet:" + bet);
+        if (self.debugLevel > 0) log.info("enableBetPicker for bet:" + bet);
         self.assertNotUndefinedOrNull(betPicker, "enableBetPicker", "betPicker");
         self.assertNotUndefinedOrNull(bet, "enableBetPicker", "bet");
         self.assertNotUndefinedOrNull(selectionDisabled, "enableBetPicker", "selectionDisabled");
@@ -505,7 +505,7 @@ var selectionViewModel = function (data) {
     };
 
     self.updateDomYourSelectionPicker = function (userGameSelection, element, toggleEnableClass, toggleDisableClass1, toggleDisableClass2, toggleRowClass, toggleDisableRowClass1, toggleDisableRowClass2) {
-        if (self.debugLevel > 0) console.log("updateDomYourSelectionPicker");
+        if (self.debugLevel > 0) log.info("updateDomYourSelectionPicker");
 
         // toggle the target element
         $(element).button('toggle');
@@ -555,30 +555,43 @@ var selectionViewModel = function (data) {
     };
 
     self.userSelectedSave = function (data, event) {
-        if (self.debugLevel > 0) console.log("userSelectedSave");
+        if (self.debugLevel > 0) log.info("userSelectedSave");
 
-        var realGameRows = data.gameRows.gameRows;
-        console.log(realGameRows);
+        // make sure they spent the correct amount
+        if (data.spentPoints() < data.MINSPENTPOINTSFORANYONEWEEK) {
+            alert("You haven't spent the required minimum bets.  You have placed " + data.placedBets() + " bet(s) and you need to place " + data.MINSPENTPOINTSFORANYONEWEEK + ".  YOU CAN DO IT!");
+        } else if (data.bonusPoints() > 0) {
+            // make sure they spent all their bonus points
+            alert("You haven't spent all your bonus points.  You have " + data.bonusPoints() + " remaining.  YOU CAN DO IT!");
 
-        delete data.gameRows.gameRows;
-        delete data.gameRows;
-        console.log(realGameRows);
-        data.gameRows = realGameRows;
+        } else {
 
-        console.log(data);
+            var goOn;
+            goOn = confirm("Are you sure you want to save your current selections?  You have placed " + data.placedBets() + " bet(s)");
 
-        $.ajax("/Selection/Save", {
-            data: ko.toJSON({ selection: self }),
-            type: "post", contentType: "application/json",
-            success: function (result) {
-                alert("Saved the results to the database (" + result + " records).  Make sure to check the 'Weekly Results' Tab to ensure they saved correctly.");
+            if (goOn) {
 
-                window.location = "/Selection";
-            },
-            fail: function (err) {
-                alert("Error occurred trying to save to the database.  Error:" + err);
-            }
-        });
+                var realGameRows = data.gameRows.gameRows;
+                delete data.gameRows.gameRows;
+                delete data.gameRows;
+                data.gameRows = realGameRows;
+
+                //log.trace(data);
+
+                $.ajax("/Selection/Save", {
+                    data: ko.toJSON({ selection: self }),
+                    type: "post", contentType: "application/json",
+                    success: function (result) {
+                        alert("Saved the results to the database (" + result + " records).  Make sure to check the 'Weekly Results' Tab to ensure they saved correctly.");
+
+                        window.location = "/Selection";
+                    },
+                    fail: function (err) {
+                        alert("Error occurred trying to save to the database.  Error:" + err);
+                    }
+                });
+            };
+        };
     };
 
     self.initializeAfterDataLoad = function () {

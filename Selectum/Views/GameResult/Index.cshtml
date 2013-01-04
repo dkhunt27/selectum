@@ -1,0 +1,57 @@
+﻿@model IEnumerable<Selectum.Models.GameResult>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.GameSpread.GameSpreadId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.WinnerTeam.TeamLongName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.FavoriteScore)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.UnderdogScore)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.GamePeriod)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.GameSpread.GameSpreadId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.WinnerTeam.TeamLongName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.FavoriteScore)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UnderdogScore)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.GamePeriod)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.GameResultId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.GameResultId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.GameResultId })
+        </td>
+    </tr>
+}
+
+</table>

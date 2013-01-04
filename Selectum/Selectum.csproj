@@ -166,6 +166,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseGameFilteredController.cs" />
+    <Compile Include="Controllers\GameResultController.cs" />
     <Compile Include="Controllers\OverallResultsByGameFilterController.cs" />
     <Compile Include="Controllers\ResultsByGameController.cs" />
     <Compile Include="Controllers\GameController.cs" />
@@ -188,6 +189,7 @@
     <Compile Include="Models\UserResult.cs" />
     <Compile Include="ViewModels\OverallResultByGameFilter.cs" />
     <Compile Include="ViewModels\OverallResultsByGameFilter.cs" />
+    <Compile Include="ViewModels\ResultByGameUserData.cs" />
     <Compile Include="ViewModels\ResultsByGame.cs" />
     <Compile Include="ViewModels\ResultByGame.cs" />
     <Compile Include="ViewModels\ResultByUser.cs" />
@@ -300,7 +302,8 @@
     <Content Include="Scripts\Libs\knockout.validation.debug.js" />
     <Content Include="Scripts\Libs\knockout.validation.js" />
     <Content Include="Scripts\Libs\modernizr-2.5.3.js" />
-    <Content Include="Scripts\Selection\Copy of selectionViewModel.js" />
+    <Content Include="Scripts\Bundles\log4javascript\log4javascript.js" />
+    <Content Include="Scripts\Bundles\log4javascript\main.css" />
     <Content Include="Scripts\Selection\selectionViewModel.js" />
     <Content Include="Scripts\Tests\Copy of selectionTests.js" />
     <Content Include="Scripts\Tests\pavlov.js" />
@@ -308,6 +311,7 @@
     <Content Include="Scripts\Tests\qunit-1.10.0.js" />
     <Content Include="Scripts\Tests\selectionTests.js" />
     <Content Include="Scripts\Tests\Tests.html" />
+    <Content Include="Scripts\viewModels\resultsByGameViewModel.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -373,6 +377,15 @@
     <Content Include="_AppStart.cshtml" />
     <Content Include="Views\Admin\GameResultProcessingForSpecifiedGameFilterId.cshtml" />
     <Content Include="Views\Admin\GameResultProcessingUpToGameFilterId.cshtml" />
+    <Content Include="Views\GameResult\Index.cshtml" />
+    <Content Include="Views\GameResult\Details.cshtml" />
+    <Content Include="Views\GameResult\Create.cshtml" />
+    <Content Include="Views\GameResult\Edit.cshtml" />
+    <Content Include="Views\GameResult\Delete.cshtml" />
+    <Content Include="Views\ResultsByGame\Index.cshtml" />
+    <Content Include="Views\ResultsByUser\Index.cshtml" />
+    <Content Include="Views\Selection\Index.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
